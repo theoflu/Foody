@@ -33,7 +33,6 @@ import {getById} from "@/common/product.service";
 import ProductFeatures from "@/components/product-detail/product-features.vue";
 import ProductComments from "@/components/product-detail/product-comments.vue";
 import ProductDescription from "@/components/product-detail/product-description.vue";
-import Json from "@babel/eslint-parser";
 
 export default {
   name: 'ProductDetailComponent',
@@ -46,10 +45,6 @@ export default {
       this.productDetail = response.data;
     });
 
-  },
-  headers:{
-
-    Authorization:"Bearer "+ Json.parse(localStorage.getItem("user")).token
   }
 }
 </script>

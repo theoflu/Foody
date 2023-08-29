@@ -11,12 +11,15 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="Foody (1)" target="17" />
+      <module name="Foody (2)" target="1.5" />
       <module name="hk-shopping-app" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Foody" options="-parameters" />
+      <module name="Foody (1)" options="-parameters" />
       <module name="hk-shopping-app" options="-parameters" />
     </option>
   </component>

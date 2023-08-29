@@ -15,6 +15,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity.Authori
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
+import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter;
 import reactor.core.publisher.Mono;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;

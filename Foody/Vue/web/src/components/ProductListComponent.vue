@@ -72,7 +72,7 @@ export default {
   components: {},
   data(){
     return {
-     products:[]
+      products:[]
     }
   },
   created(){

@@ -16,7 +16,8 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", maxAge = 3600,allowedHeaders = "*")
+
 public class ProductApi {
 
     private final ProductService productService;

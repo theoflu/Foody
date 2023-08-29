@@ -25,7 +25,6 @@ export default {
           console.log(localStorage.getItem("user"));
 
 
-
           });
     }}
 

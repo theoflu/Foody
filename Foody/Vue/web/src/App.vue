@@ -1,5 +1,7 @@
 <template>
+  <div>
   <nav>
+<home-view/>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link to="/product">Product List</router-link> |
@@ -7,7 +9,9 @@
     <router-link to="/RegisterView">Register</router-link>
 
   </nav>
-  <router-view/>
+  </div>
+    <router-view/>
+
 </template>
 
 <style lang="scss">
@@ -32,3 +36,12 @@ nav {
   }
 }
 </style>
+<script>
+
+import {defineComponent} from "vue";
+import HomeView from "@/views/HomeView.vue";
+
+export default defineComponent({
+  components: {HomeView}
+})
+</script>

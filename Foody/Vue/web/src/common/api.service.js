@@ -1,14 +1,12 @@
 import axios from "axios";
 
 export function get(path=''){
-        return axios.get(path).catch(err=> {
-            console.log(err);
+        axios.get(path).catch(err=> {
             throw new Error("Http Get Error : api.service"+ err);
         })
 }
 export function post(path='',params){
-    return axios.post(path,params).catch(err=> {
-        console.log(err);
+    axios.post(path,params).catch(err=> {
         throw new Error("Http Post Error : api.service "+err);
     })
 }
