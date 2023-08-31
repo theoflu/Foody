@@ -17,9 +17,9 @@ export default {
   },
   created(){},
   mounted() {console.log("mounted() called ......");
+    console.log(JSON.parse(localStorage.getItem("user")).token);
   },methods:{RegisterData() {
-
-      if(this.user.password!==this.$refs.againpsw.value || this.user.userName==="")
+      if(this.user.password!==this.$refs.againpsw.value)
       {
         alert("Passwords Unmatch!")
 
@@ -51,7 +51,6 @@ export default {
 
 
 }
-
 </script>
 <template>
   <div class="container">

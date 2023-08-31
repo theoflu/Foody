@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/filestore")
 @RequiredArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", maxAge = 3600,allowedHeaders = "*")
 public class FileStoreController {
     private final FileStoreService fileStoreService;
 

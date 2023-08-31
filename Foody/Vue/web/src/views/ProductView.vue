@@ -3,7 +3,8 @@ import ProductListComponent from "@/components/ProductListComponent.vue";
 
 export default {
   name: "ProductView",
-  components: {ProductListComponent}
+  components: {ProductListComponent},
+
 }
 </script>
 

@@ -33,7 +33,7 @@ import {getById} from "@/common/product.service";
 import ProductFeatures from "@/components/product-detail/product-features.vue";
 import ProductComments from "@/components/product-detail/product-comments.vue";
 import ProductDescription from "@/components/product-detail/product-description.vue";
-//
+
 export default {
   name: 'ProductDetailComponent',
   components: {ProductFeatures, ProductDescription, ProductComments, ImageCarousel},
@@ -44,7 +44,6 @@ export default {
     getById(this.$route.params.id).then(response => {
       this.productDetail = response.data;
     });
-
   }
 }
 </script>

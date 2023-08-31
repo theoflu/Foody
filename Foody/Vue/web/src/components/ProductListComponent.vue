@@ -70,14 +70,14 @@ import {BASE_URL} from "@/common/config";
 export default {
   name: 'ProductListComponent',
   components: {},
+
   data(){
     return {
       products:[]
     }
   },
-  created(){
+   created(){
     this.getProducts();
-
   },methods:{
     getProducts(){
       getAll().then(response=>{
