@@ -27,6 +27,8 @@ public class ProductEs {
     private LinkedHashMap<moneyType ,BigDecimal> Price; // HASHSET veya herhangi set olmalı
     private  CategoryEs category;
     private List<String> images;
+    private int productStock;
+
     private Boolean active;
 
 }

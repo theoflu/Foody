@@ -12,6 +12,7 @@ import java.util.List;
 public class ProductDetailResponse {
     private String id;
     private List<String> images;
+    private  String productCode;//name+model
     private String name;
     private String description;
     private ProductSellerResponse seller;
@@ -22,4 +23,6 @@ public class ProductDetailResponse {
     private BigDecimal price;
     private String moneySymbol;
     private String categoryId;
+    private int productStock;
+
 }

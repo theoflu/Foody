@@ -48,7 +48,7 @@ public class ProductDemoData {
 
     @EventListener(ApplicationReadyEvent.class)
     public void migrate() {
-       //productRepository.deleteAll().block();
+      // productRepository.deleteAll().block();
 
         Long countOfData=productService.count().block();
 
@@ -77,13 +77,16 @@ public class ProductDemoData {
 
             ProductResponse response= productService.save(
                         ProductSaveRequest.builder()
-                                .sellerId(randomUUID().toString())
+                                .sellerId("a"+randomUUID().toString())
                                 .id(randomUUID().toString())
+                                .productCode(i+randomUUID().toString())
+                                .available(3)
                                 .description("Product Descip"+i)
                                 .categoryId(categoryResponse.getId())
                                 .name("Product Name "+i)
-                                .features("<li>Black Color </li>")
+                                .features("<li>Black Color </li>"+i)
                                 .Price(prc)
+                                .productStock(14+i)
                                 .images(List.of(uuid))
                                 .build());
 

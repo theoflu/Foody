@@ -13,9 +13,8 @@ import java.util.Optional;
 
 public interface UserService {
 Mono<UserEntity> createUser(UserSaveReq userSaveReq);
-
-
-    Mono<UserEntity> findUserByEmail(String Email);
+Mono<UserEntity> findUserByEmail(String username);
+UserEntity findUserBy(String username);
 LoginMesage login(LoginDto loginDto);
 Flux<UserEntity> findAll ();
 }

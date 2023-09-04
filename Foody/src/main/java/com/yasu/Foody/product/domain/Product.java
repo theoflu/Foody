@@ -1,11 +1,11 @@
 package com.yasu.Foody.product.domain;
 
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Unwrapped;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -16,6 +16,8 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(of="id")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     @Id
     private String id;
@@ -27,6 +29,7 @@ public class Product {
     private LinkedHashMap<moneyType ,BigDecimal> Price;
     private  String categoryId;
     private List<ProductImage> productImage;
+    private int productStock;
     private Boolean active;
 
 }

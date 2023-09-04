@@ -51,7 +51,7 @@ public class ProductEsServiceImpl implements ProductEsService{
                 .id(product.getId())
                 .name(product.getName())
                 .Price(product.getPrice())
-
+              .productStock(product.getProductStock())
               //TODO get company name and code
                 .seller(CompanyEs.builder().id(product.getId()).name("Test").build())
                 .category(getProductCategory(product.getCategoryId()))

@@ -21,6 +21,8 @@
                                 item.seller.name
                               }}</a>
                             </div>
+                            <div class="product-info-detail">Stock : <span class="value" v-html="item.productStock"></span></div>
+
                             <div class="product-info-detail"><span v-if="item.freeDelivery"> FREE </span>Delivery: <span
                                 class="value">{{ item.deliveryIn }}</span></div>
                             <div class="product-info-detail"><span class="value" v-html="item.features"></span></div>

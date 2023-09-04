@@ -1,6 +1,6 @@
 package com.yasu.Foody.product.model.product;
 
-import com.yasu.Foody.product.domain.moneyType;
+
 import com.yasu.Foody.product.model.ProductSellerResponse;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +14,7 @@ public class ProductResponse {
     private String id;
     private String image;
     private String name;
+    private  String productCode;//name+model
     private  String description;
     private ProductSellerResponse seller;
     private  String features;
@@ -23,6 +24,8 @@ public class ProductResponse {
     private BigDecimal price;
     private String moneySymbol;
     private  String categoryId;
+    private int productStock;
+
 
 
 

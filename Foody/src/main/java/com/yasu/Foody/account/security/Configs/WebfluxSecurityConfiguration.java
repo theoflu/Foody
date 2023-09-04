@@ -56,7 +56,11 @@ public class WebfluxSecurityConfiguration {
                         authorizeExchangeSpec
                                 .pathMatchers("/user/login").permitAll()
                                 .pathMatchers("/user/create").permitAll()
+                                .pathMatchers("/user/v1login").permitAll()
                                 .pathMatchers("/filestore/{id}").permitAll()
+                                .pathMatchers("/cart/save").permitAll()
+                                .pathMatchers("/products/add").permitAll()
+                                .pathMatchers("/products/update").permitAll()
                                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                                 .anyExchange().authenticated());
         return httpSecurity.build();

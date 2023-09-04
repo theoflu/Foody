@@ -1,6 +1,7 @@
 package com.yasu.Foody.product.service.product;
 
 
+import com.yasu.Foody.account.security.dto.Message;
 import com.yasu.Foody.product.domain.Product;
 import com.yasu.Foody.product.model.product.ProductDetailResponse;
 import com.yasu.Foody.product.model.product.ProductResponse;
@@ -12,11 +13,15 @@ public interface ProductService {
 
     Flux<ProductResponse> getAll();
     Flux<Product> getAl();
+    Mono<Product> findProductBy(String productCode);
+    Mono<Product> findProductByProductCode(String productCode);
     ProductResponse save(ProductSaveRequest productSaveRequest);
 
    Mono<Long> count();
 
    Mono<ProductDetailResponse> getProductDetail(String id);
+
+
 
 
 }

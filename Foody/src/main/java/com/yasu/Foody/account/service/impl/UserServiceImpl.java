@@ -76,8 +76,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<UserEntity> findUserByEmail(String Email) {
-        return userRepository.findUserByEmail(Email);
+    public Mono<UserEntity> findUserByEmail(String username) {
+
+        return userRepository.findUserByEmail(username);
+    }
+
+    @Override
+    public UserEntity findUserBy(String username) {
+        return null;
     }
 
     @Override

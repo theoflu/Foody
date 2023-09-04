@@ -1,5 +1,6 @@
 package com.yasu.Foody.product.service.impl.product;
 
+import com.yasu.Foody.account.security.dto.Message;
 import com.yasu.Foody.product.domain.Product;
 import com.yasu.Foody.product.domain.ProductImage;
 import com.yasu.Foody.product.domain.es.ProductEs;
@@ -11,6 +12,7 @@ import com.yasu.Foody.product.model.ProductSellerResponse;
 import com.yasu.Foody.product.repository.ProductRepository;
 import com.yasu.Foody.product.service.product.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -43,16 +45,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Mono<Product> findProductBy(String productCode) {
+        return productRepository.findProductBy(productCode);
+    }
+
+    @Override
+    public Mono<Product> findProductByProductCode(String productCode) {
+        return productRepository.findProductByProductCode(productCode);
+    }
+
+    @Override
     public  ProductResponse save(ProductSaveRequest productSaveRequest) {
        Product product= Product.builder()
+               .id(productSaveRequest.getId())
                 .active(Boolean.TRUE)
-                .productCode("Pr")
+                .productCode(productSaveRequest.getProductCode())
                 .categoryId(productSaveRequest.getCategoryId())
                 .companyID(productSaveRequest.getSellerId())
                 .description(productSaveRequest.getDescription())
                 .features(productSaveRequest.getFeatures())
                 .name(productSaveRequest.getName())
                .Price(productSaveRequest.getPrice())
+               .productStock(productSaveRequest.getProductStock())
                 .productImage(productSaveRequest.getImages().stream().map(it-> new ProductImage(ProductImage.ImageType.FEATURE,it)).collect(Collectors.toList()))//Resim listesindeki tüm elemanları getirip içinde dolaşmak içins
                 .build();
        product= productRepository.save(product).block();
@@ -71,6 +85,8 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+
+
     private Mono<ProductDetailResponse> mapToDto(Mono<ProductEs> productEsMono) {
         if(productEsMono==null) {
             return null;
@@ -78,6 +94,7 @@ public class ProductServiceImpl implements ProductService {
     return   productEsMono.map(productEs -> ProductDetailResponse.builder()
                 //TODO client request üzridn validate edilecek
                 .price(productEs.getPrice().get(moneyType.USD))
+            .productCode(productEs.getProductCode())
                 .moneySymbol(moneyType.USD.getSymbol())
                 .name(productEs.getName())
                 .id(productEs.getId())
@@ -87,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
                 .available(productAmountService.getByProductId(productEs.getId()))
                 .freeDelivery(true)
                 .deliveryIn("3")
-
+            .productStock(productEs.getProductStock())
                 .images(productEs.getImages())
                 .seller(ProductSellerResponse.builder().id(productEs.getSeller().getId()).name(productEs.getSeller().getName()).build())
                 .build());
@@ -103,6 +120,7 @@ public class ProductServiceImpl implements ProductService {
                     //TODO client request üzridn validate edilecek
                     .price(productEs.getPrice().get(moneyType.USD))
                     .moneySymbol(moneyType.USD.getSymbol())
+                    .productCode(productEs.getProductCode())
                     .name(productEs.getName())
                     .id(productEs.getId())
                     .description(productEs.getDescription())
@@ -112,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
                     .freeDelivery(true)
                     .deliveryIn("3")
                     .features(productEs.getFeatures())
-
+                    .productStock(productEs.getProductStock())
                     .image(productEs.getImages().get(0))
                     .seller(ProductSellerResponse.builder().id(productEs.getSeller().getId()).name(productEs.getSeller().getName()).build())
                     .build();

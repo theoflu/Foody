@@ -1,6 +1,7 @@
 package com.yasu.Foody.account.api;
 
 
+import com.yasu.Foody.account.dto.LoginDto;
 import com.yasu.Foody.account.entity.UserEntity;
 import com.yasu.Foody.account.entity.model.UserSaveReq;
 
@@ -9,6 +10,7 @@ import com.yasu.Foody.account.repository.UserRepository;
 
 import com.yasu.Foody.account.security.dto.AuthRequest;
 import com.yasu.Foody.account.security.dto.AuthResponse;
+import com.yasu.Foody.account.security.dto.Message;
 import com.yasu.Foody.account.security.jwt.JWTUtil;
 
 
@@ -41,8 +43,8 @@ public class UserController {
 
     private final UserService usersService;
 
-    @Autowired
-    UserRepository userRepository;
+
+    private final UserRepository userRepository;
 
 
     private final JWTUtil jwtUtil;
@@ -58,6 +60,20 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    public Mono<ResponseEntity<AuthResponse>> loginUser( @RequestBody UserEntity loginDto){
+
+        return usersService.findUserByEmail(loginDto.getUsername())
+                .filter(userDetails ->
+                        passwordEncoder.matches(
+                                loginDto.getPassword(),
+                                userDetails.getPassword()
+                        )
+                ).map(userDetails -> ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails),userDetails)))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(UNAUTHORIZED).build()));
+
+    }
+    /*
+    @PostMapping("/login")
     public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest authRequest) {
         return userService.findByUsername(authRequest.getUsername())
                 .filter(userDetails ->
@@ -65,9 +81,12 @@ public class UserController {
                                 authRequest.getPassword(),
                                 userDetails.getPassword()
                         )
-                ).map(userDetails -> ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails))))
+                ).map(userDetails -> ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails),userDetails.getUsername())))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(UNAUTHORIZED).build()));
     }
+
+
+     */
 
 
 

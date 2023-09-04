@@ -1,5 +1,6 @@
 package com.yasu.Foody.account.security.dto;
 
+import com.yasu.Foody.account.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,5 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthResponse {
     private String token;
+    private UserEntity user;
 
 }
