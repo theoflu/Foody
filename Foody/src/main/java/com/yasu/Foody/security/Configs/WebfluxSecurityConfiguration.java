@@ -1,28 +1,20 @@
-package com.yasu.Foody.account.security.Configs;
+package com.yasu.Foody.security.Configs;
 
 
-import com.yasu.Foody.account.security.jwt.AuthenticationManager;
-import com.yasu.Foody.account.security.jwt.SecurityContextRepository;
+import com.yasu.Foody.security.jwt.AuthenticationManager;
+import com.yasu.Foody.security.jwt.SecurityContextRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity.AuthorizeExchangeSpec;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.context.ServerSecurityContextRepository;
-import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import reactor.core.publisher.Mono;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -57,6 +49,7 @@ public class WebfluxSecurityConfiguration {
                                 .pathMatchers("/user/login").permitAll()
                                 .pathMatchers("/user/create").permitAll()
                                 .pathMatchers("/user/v1login").permitAll()
+                                .pathMatchers("/user/product/add").permitAll()
                                 .pathMatchers("/filestore/{id}").permitAll()
                                 .pathMatchers("/cart/save").permitAll()
                                 .pathMatchers("/products/add").permitAll()

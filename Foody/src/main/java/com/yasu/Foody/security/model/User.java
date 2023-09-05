@@ -1,4 +1,4 @@
-package com.yasu.Foody.account.security.model;
+package com.yasu.Foody.security.model;
 
 
 

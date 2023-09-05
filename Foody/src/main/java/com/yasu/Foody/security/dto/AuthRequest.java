@@ -1,4 +1,4 @@
-package com.yasu.Foody.account.security.dto;
+package com.yasu.Foody.security.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

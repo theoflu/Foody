@@ -1,6 +1,5 @@
 package com.yasu.Foody.product.service.impl.product;
 
-import com.yasu.Foody.account.security.dto.Message;
 import com.yasu.Foody.product.domain.Product;
 import com.yasu.Foody.product.domain.ProductImage;
 import com.yasu.Foody.product.domain.es.ProductEs;
@@ -12,12 +11,10 @@ import com.yasu.Foody.product.model.ProductSellerResponse;
 import com.yasu.Foody.product.repository.ProductRepository;
 import com.yasu.Foody.product.service.product.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,6 +82,22 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    @Override
+    public Mono<Product> updateProductStock(Product product) {
+Product prd=Product.builder()  .id(product.getId())
+        .active(Boolean.TRUE)
+        .productCode(product.getProductCode())
+        .categoryId(product.getCategoryId())
+        .description(product.getDescription())
+        .features(product.getFeatures())
+        .name(product.getName())
+        .Price(product.getPrice())
+        .productStock(product.getProductStock())
+        .build();
+
+
+        return productRepository.save(prd);
+    }
 
 
     private Mono<ProductDetailResponse> mapToDto(Mono<ProductEs> productEsMono) {

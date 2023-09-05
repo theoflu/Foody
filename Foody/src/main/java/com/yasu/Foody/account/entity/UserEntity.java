@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserEntity implements UserDetails {
     @Id
-    private String id;
+    private String id;//idleri long yap
     private String userName;
     private String email;
     private String password;
     private String cellphone;
-    private String address;
     private Boolean enabled;
+    private String userType;
     private List<ERole> roles;
 
     /*

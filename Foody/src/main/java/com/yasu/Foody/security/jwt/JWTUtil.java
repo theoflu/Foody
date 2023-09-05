@@ -1,4 +1,4 @@
-package com.yasu.Foody.account.security.jwt;
+package com.yasu.Foody.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

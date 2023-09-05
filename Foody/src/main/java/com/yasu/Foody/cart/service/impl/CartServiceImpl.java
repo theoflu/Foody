@@ -1,8 +1,8 @@
 package com.yasu.Foody.cart.service.impl;
 
-import co.elastic.clients.util.DateTime;
+
 import com.yasu.Foody.account.entity.UserEntity;
-import com.yasu.Foody.account.security.dto.Message;
+
 import com.yasu.Foody.account.service.UserService;
 import com.yasu.Foody.cart.entitiy.CartEntity;
 import com.yasu.Foody.cart.entitiy.CartEs;
@@ -13,13 +13,11 @@ import com.yasu.Foody.cart.service.CartEsService;
 import com.yasu.Foody.cart.service.CartService;
 
 import com.yasu.Foody.product.domain.Product;
-import com.yasu.Foody.product.domain.moneyType;
-import com.yasu.Foody.product.model.ProductSellerResponse;
-import com.yasu.Foody.product.model.product.ProductResponse;
+
 import com.yasu.Foody.product.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
+
 import reactor.core.publisher.Mono;
 
 import java.rmi.AlreadyBoundException;
@@ -52,6 +50,8 @@ public class CartServiceImpl implements CartService {
                             .createdBy(cartReq.getUsername())
                             .build();
                     //TODO Product stock güncellencek
+                    product.setProductStock(product.getProductStock()-1);
+                    productService.updateProductStock(product);
                     return mapToDto(cartEsService.saveNewCart(cartEntity));
 
                   /*

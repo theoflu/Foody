@@ -1,10 +1,7 @@
-package com.yasu.Foody.account.security.Configs;
+package com.yasu.Foody.security.Configs;
 
 
-import com.yasu.Foody.account.entity.UserEntity;
-import com.yasu.Foody.account.entity.roles.ERole;
 import com.yasu.Foody.account.repository.UserRepository;
-import com.yasu.Foody.account.security.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -14,8 +11,6 @@ import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
 
 /**
  * <span style='color:white'>Step 2: Create the ApplicationConfiguration class</span>

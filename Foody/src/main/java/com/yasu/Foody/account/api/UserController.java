@@ -1,37 +1,33 @@
 package com.yasu.Foody.account.api;
 
 
-import com.yasu.Foody.account.dto.LoginDto;
 import com.yasu.Foody.account.entity.UserEntity;
 import com.yasu.Foody.account.entity.model.UserSaveReq;
 
 import com.yasu.Foody.account.repository.UserRepository;
 
 
-import com.yasu.Foody.account.security.dto.AuthRequest;
-import com.yasu.Foody.account.security.dto.AuthResponse;
-import com.yasu.Foody.account.security.dto.Message;
-import com.yasu.Foody.account.security.jwt.JWTUtil;
+import com.yasu.Foody.security.dto.AuthResponse;
+import com.yasu.Foody.security.jwt.JWTUtil;
 
 
 import com.yasu.Foody.account.service.UserService;
 
-import com.yasu.Foody.account.security.errors.AlreadyExistsException;
+import com.yasu.Foody.product.model.product.ProductSaveRequest;
+import com.yasu.Foody.product.service.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 
 @RestController
@@ -49,12 +45,13 @@ public class UserController {
 
     private final JWTUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-    private final ReactiveUserDetailsService userService;
+    private final ProductService productService;
 
     @PostMapping("/create")
     public Mono<ResponseEntity<?>> createUser( @Valid @RequestBody UserSaveReq entity){
         return usersService.createUser(entity)
-                .map(user -> ResponseEntity.status(HttpStatus.CREATED).build());
+                .map(user -> ResponseEntity.status(HttpStatus.CREATED).build())
+                ;
 
 
     }
@@ -69,7 +66,9 @@ public class UserController {
                                 userDetails.getPassword()
                         )
                 ).map(userDetails -> ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails),userDetails)))
-                .switchIfEmpty(Mono.just(ResponseEntity.status(UNAUTHORIZED).build()));
+                .switchIfEmpty(Mono.just(ResponseEntity.status(NOT_FOUND).build()));
+
+
 
     }
     /*
@@ -88,7 +87,12 @@ public class UserController {
 
      */
 
+    @PostMapping("/product/add")
+    public  ResponseEntity<?> seller(ProductSaveRequest productSaveRequest){
 
+
+        return ResponseEntity.ok(  productService.save(productSaveRequest));
+    }
 
     @GetMapping("/list")
     public Flux<UserEntity> getAllUsers(){
