@@ -45,10 +45,10 @@ public class ProductDemoData {
     private final ProductRepository productRepository;
     private final FileStoreService fileStoreService;
     private final UserService userService;
-
+ /*
     @EventListener(ApplicationReadyEvent.class)
     public void migrate() {
-        /*
+
       // productRepository.deleteAll().block();
 
         Long countOfData=productService.count().block();
@@ -105,9 +105,9 @@ public class ProductDemoData {
 
         }
 
-*/
+
 
 
     }
-
+*/
 }

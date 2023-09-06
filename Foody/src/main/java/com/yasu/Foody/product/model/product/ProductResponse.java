@@ -1,6 +1,5 @@
 package com.yasu.Foody.product.model.product;
 
-
 import com.yasu.Foody.product.model.ProductSellerResponse;
 import lombok.Builder;
 import lombok.Data;

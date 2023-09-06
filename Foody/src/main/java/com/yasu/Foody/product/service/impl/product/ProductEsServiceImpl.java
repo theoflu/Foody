@@ -42,6 +42,35 @@ public class ProductEsServiceImpl implements ProductEsService{
     @Override
 
     public Mono<ProductEs> saveNewProduct(Product product) {
+        return getProductCategory(product.getCategoryId())
+                .flatMap(category -> {
+                    return productEsRepository.save(ProductEs.builder()
+                            .active(product.getActive())
+                            .productCode(product.getProductCode())
+                            .description(product.getDescription())
+                            .features(product.getFeatures())
+                            .id(product.getId())
+                            .name(product.getName())
+                            .Price(product.getPrice())
+                            .productStock(product.getProductStock())
+                           .seller(CompanyEs.builder().id(product.getId()).name("Test").build())
+                            .category(category)
+                              .images(product.getProductImage().stream().map(ProductImage::getUrl)
+                             .collect(Collectors.toList()))
+                            .build());
+                });
+    }
+
+    private Mono<CategoryEs> getProductCategory(String categoryId) {
+        return categoryService.getById(categoryId)
+                .map(category -> CategoryEs.builder()
+                        .name(category.getName())
+                        .id(category.getId())
+                        .build());
+    }
+/*
+
+ public Mono<ProductEs> saveNewProduct(Product product) {
 
       return  productEsRepository.save( ProductEs.builder()
                 .active(product.getActive())
@@ -54,19 +83,22 @@ public class ProductEsServiceImpl implements ProductEsService{
               .productStock(product.getProductStock())
               //TODO get company name and code
                 .seller(CompanyEs.builder().id(product.getId()).name("Test").build())
-              //  .category(getProductCategory(product.getCategoryId()))
+               .category(getProductCategory(product.getCategoryId()))
                 //      .images(product.getProductImage().stream()
                      //         .map(ProductImage::getUrl)
-                    //          .collect(Collectors.toList()))
+                         //     .collect(Collectors.toList()))
                 .build());
 
 
     }
-    private CategoryEs getProductCategory(String categoryId){
-        Mono<Category> categoryMono = categoryService.getById(categoryId);
-
-        return CategoryEs.builder().name(categoryMono.block().getName()).id( categoryMono.block().getId()).build();
-    }
+    private Mono<CategoryEs> getProductCategory(String categoryId) {
+        return categoryService.getById(categoryId)
+                .map(category -> CategoryEs.builder()
+                        .name(category.getName())
+                        .id(category.getId())
+                        .build());
+    } düzeltir misin
+ */
     @Override
     public Flux<ProductEs> findAl() {
 
