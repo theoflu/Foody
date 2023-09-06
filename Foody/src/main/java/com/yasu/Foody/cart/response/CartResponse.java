@@ -15,8 +15,8 @@ import java.util.Date;
 @Builder
 public class CartResponse {
     private String id;
-    private UserEntity userEntity;
-    private Product product;
+    private String userId;
+    private String  productId;
     private Category category;
     private Date createdTime;
     private String createdBy;

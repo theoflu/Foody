@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Flux<ProductResponse> getAll() {
 
-        return productEsService.findAl().map(this::mapToDto);
+        return null;//productEsService.findAl().map(this::mapToDto);
 
     }
     @Override
@@ -51,8 +51,9 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findProductByProductCode(productCode);
     }
 
-    @Override
-    public  ProductResponse save(ProductSaveRequest productSaveRequest) {
+    @Override //TODO bu yapı düzelcek product artık elle girilebilecek önce blockları kaldırıp
+             //TODO .. basit bir ürün ekle sonra şu olay gerektiren resim falan olayını yap.
+    public Mono<ProductResponse> save(ProductSaveRequest productSaveRequest) {
        Product product= Product.builder()
                .id(productSaveRequest.getId())
                 .active(Boolean.TRUE)
@@ -64,11 +65,16 @@ public class ProductServiceImpl implements ProductService {
                 .name(productSaveRequest.getName())
                .Price(productSaveRequest.getPrice())
                .productStock(productSaveRequest.getProductStock())
-                .productImage(productSaveRequest.getImages().stream().map(it-> new ProductImage(ProductImage.ImageType.FEATURE,it)).collect(Collectors.toList()))//Resim listesindeki tüm elemanları getirip içinde dolaşmak içins
+               // .productImage(productSaveRequest.getImages().stream().map(it-> new ProductImage(ProductImage.ImageType.FEATURE,it)).collect(Collectors.toList()))//Resim listesindeki tüm elemanları getirip içinde dolaşmak içins
                 .build();
-       product= productRepository.save(product).block();
 
-            return  this.mapToDto(productEsService.saveNewProduct(product).block());
+
+        return productRepository.save(product)
+                .flatMap(savedProduct -> {
+                    // savedProduct ile ilgili işlemleri gerçekleştirin
+                    return mapToDto(productEsService.saveNewProduct(savedProduct));
+                });
+
     }
 
     @Override
@@ -78,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Mono<ProductDetailResponse> getProductDetail(String id) {
-        return  this.mapToDto(productEsService.finById(id));
+        return null;// this.mapToDto(productEsService.finById(id));
 
     }
 
@@ -99,7 +105,7 @@ Product prd=Product.builder()  .id(product.getId())
         return productRepository.save(prd);
     }
 
-
+/*
     private Mono<ProductDetailResponse> mapToDto(Mono<ProductEs> productEsMono) {
         if(productEsMono==null) {
             return null;
@@ -125,30 +131,29 @@ Product prd=Product.builder()  .id(product.getId())
 
     }
 
-    private ProductResponse mapToDto(ProductEs productEs) {
-        if(productEs==null) {
+
+ */
+    private Mono<ProductResponse> mapToDto(Mono<ProductEs> productEsMono) {
+        if(productEsMono==null) {
             return null;
         }
-            ProductResponse productResponse =  ProductResponse.builder()
-                    //TODO client request üzridn validate edilecek
-                    .price(productEs.getPrice().get(moneyType.USD))
-                    .moneySymbol(moneyType.USD.getSymbol())
-                    .productCode(productEs.getProductCode())
-                    .name(productEs.getName())
-                    .id(productEs.getId())
-                    .description(productEs.getDescription())
-                    .deliveryIn(productDeliveryServiceImpl.getDeliveryInfo(productEs.getId()))
-                    .categoryId(productEs.getCategory().getId())
-                    .available(productAmountService.getByProductId(productEs.getId()))
-                    .freeDelivery(true)
-                    .deliveryIn("3")
-                    .features(productEs.getFeatures())
-                    .productStock(productEs.getProductStock())
-                    .image(productEs.getImages().get(0))
-                    .seller(ProductSellerResponse.builder().id(productEs.getSeller().getId()).name(productEs.getSeller().getName()).build())
-                    .build();
+        return   productEsMono.map(productEs -> ProductResponse.builder()
+                //TODO client request üzridn validate edilecek
+                .price(productEs.getPrice().get(moneyType.USD))
+                .productCode(productEs.getProductCode())
+                .moneySymbol(moneyType.USD.getSymbol())
+                .name(productEs.getName())
+                .id(productEs.getId())
+                .description(productEs.getDescription())
+                .deliveryIn(productDeliveryServiceImpl.getDeliveryInfo(productEs.getId()))
+             //   .categoryId(productEs.getCategory().getId())
+                .available(productAmountService.getByProductId(productEs.getId()))
+                .freeDelivery(true)
+                .deliveryIn("3")
+                .productStock(productEs.getProductStock())
 
-                    return productResponse;
+                .seller(ProductSellerResponse.builder().id(productEs.getSeller().getId()).name(productEs.getSeller().getName()).build())
+                .build());
     }
 
 }

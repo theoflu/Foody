@@ -14,7 +14,7 @@ public interface ProductService {
     Flux<Product> getAl();
     Mono<Product> findProductBy(String productCode);
     Mono<Product> findProductByProductCode(String productCode);
-    ProductResponse save(ProductSaveRequest productSaveRequest);
+   Mono<ProductResponse> save(ProductSaveRequest productSaveRequest);
 
    Mono<Long> count();
 

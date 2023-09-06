@@ -88,7 +88,7 @@ public class UserController {
      */
 
     @PostMapping("/product/add")
-    public  ResponseEntity<?> seller(ProductSaveRequest productSaveRequest){
+    public  ResponseEntity<?> seller(@Valid @RequestBody ProductSaveRequest productSaveRequest){
 
 
         return ResponseEntity.ok(  productService.save(productSaveRequest));

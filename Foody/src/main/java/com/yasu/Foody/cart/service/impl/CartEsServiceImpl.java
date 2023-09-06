@@ -23,8 +23,8 @@ public class CartEsServiceImpl implements CartEsService {
     public Mono<CartEs> saveNewCart(CartEntity cartEntity) {
         return  esCartRepository.save( CartEs.builder()
                 .id(cartEntity.getId())
-                .userEntity(cartEntity.getUserEntity())
-                .product(cartEntity.getProduct())
+                .userId(cartEntity.getUserId())
+                .productId(cartEntity.getProductId())
                 .createdTime(new Date())
                 .createdBy("")
                 .build());

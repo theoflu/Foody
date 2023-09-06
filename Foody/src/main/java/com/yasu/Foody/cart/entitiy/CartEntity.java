@@ -19,8 +19,8 @@ import java.util.Date;
 public class CartEntity {
     @Id
     private String id;
-    private UserEntity userEntity;
-    private Product product;
+    private String userId;
+    private String productId;
     private Date createdTime;
     private String createdBy;
     private Date updatedAt;

@@ -1,6 +1,7 @@
 package com.yasu.Foody.product.model.product;
 
 
+import com.mongodb.lang.Nullable;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,10 +24,15 @@ public class ProductSaveRequest {
     private String description;
     private String features;
     private int available;
+
     private LinkedHashMap<moneyType ,BigDecimal> Price;
+
     private List<String> images;
+
     private String sellerId;
+
     private String categoryId;
+
     private int productStock;
 
 }

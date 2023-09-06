@@ -44,8 +44,8 @@ public class CartServiceImpl implements CartService {
 
                     CartEntity cartEntity = CartEntity.builder()
                             .id(cartReq.getId())
-                            .userEntity(userEntity)
-                            .product(product)
+                            .userId(userEntity.getId())
+                            .productId(product.getId())
                             .createdTime(new Date())
                             .createdBy(cartReq.getUsername())
                             .build();
@@ -72,8 +72,8 @@ public class CartServiceImpl implements CartService {
 
         return  cartEs.map(cartEs1 -> CartResponse.builder()
                 .id(cartEs1.getId())
-                .userEntity(cartEs1.getUserEntity())
-                .product(cartEs1.getProduct())
+                .userId(cartEs1.getUserId())
+                .productId(cartEs1.getProductId())
                 .build());
 
 

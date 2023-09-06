@@ -48,6 +48,7 @@ public class ProductDemoData {
 
     @EventListener(ApplicationReadyEvent.class)
     public void migrate() {
+        /*
       // productRepository.deleteAll().block();
 
         Long countOfData=productService.count().block();
@@ -80,7 +81,7 @@ public class ProductDemoData {
                                 .sellerId("a"+randomUUID().toString())
                                 .id(randomUUID().toString())
                                 .productCode(i+randomUUID().toString())
-                                .available(3)
+                                    .available(3)
                                 .description("Product Descip"+i)
                                 .categoryId(categoryResponse.getId())
                                 .name("Product Name "+i)
@@ -94,11 +95,19 @@ public class ProductDemoData {
 
 
 
+
+
+
             }
+
+
             );
+
         }
 
+*/
 
 
     }
+
 }
