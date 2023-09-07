@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = Product.builder()
                 .id(productSaveRequest.getId())
-                .active(Boolean.FALSE)
+                .active(Boolean.TRUE)
                 .productCode(productSaveRequest.getProductCode())
                 .categoryId(productSaveRequest.getCategoryId())
                 .companyID(productSaveRequest.getSellerId())

@@ -24,7 +24,6 @@ public class ProductSaveRequest {
     private String description;
     private String features;
     private int available;
-
     private LinkedHashMap<moneyType ,BigDecimal> Price;
 
     private List<String> images;
