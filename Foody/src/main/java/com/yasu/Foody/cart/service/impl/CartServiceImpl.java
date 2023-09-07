@@ -31,6 +31,7 @@ public class CartServiceImpl implements CartService {
     private final UserService userService;
     private final ProductService productService;
     private final CartEsService cartEsService;
+    private final CartRepository cartRepository;
 
     public Mono<CartResponse> save(CartReq cartReq) {
         Mono<UserEntity> userEntityMono = userService.findUserByEmail(cartReq.getUsername());
@@ -42,6 +43,10 @@ public class CartServiceImpl implements CartService {
                     UserEntity userEntity = tuple.getT1();
                     Product product = tuple.getT2();
 
+                    if (product.getProductStock() <= 0) {
+                        return Mono.error(new AlreadyBoundException("Ürün stokta bulunmuyor."));
+                    }
+
                     CartEntity cartEntity = CartEntity.builder()
                             .id(cartReq.getId())
                             .userId(userEntity.getId())
@@ -49,22 +54,17 @@ public class CartServiceImpl implements CartService {
                             .createdTime(new Date())
                             .createdBy(cartReq.getUsername())
                             .build();
-                    //TODO Product stock güncellencek
-                    product.setProductStock(product.getProductStock()-1);
-                    productService.updateProductStock(product);
-                    return mapToDto(cartEsService.saveNewCart(cartEntity));
 
-                  /*
+                    // Ürün stokunu güncelle
+                    product.setProductStock(product.getProductStock() - 1);
+
                     return cartRepository.save(cartEntity)
-                            .flatMap(savedCart -> {
-                                return mapToDto(cartEsService.saveNewCart(savedCart));
-                            });
-                   */
-                }).switchIfEmpty(Mono.error(new AlreadyBoundException("Öyle bir kullanıcı veya ürün yok!!")));
-
-
+                            .flatMap(savedCart -> productService.updateProductStock(product)
+                                    .thenReturn(savedCart))
+                            .flatMap(savedCart -> mapToDto(cartEsService.saveNewCart(savedCart)));
+                })
+                .switchIfEmpty(Mono.error(new AlreadyBoundException("Öyle bir kullanıcı veya ürün yok!!")));
     }
-
     private Mono<CartResponse> mapToDto(Mono<CartEs> cartEs) {
         if (cartEs == null) {
             return Mono.empty(); // Boş bir Mono döndürün.

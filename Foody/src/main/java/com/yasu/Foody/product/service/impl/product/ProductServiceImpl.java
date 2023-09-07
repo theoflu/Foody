@@ -9,9 +9,12 @@ import com.yasu.Foody.product.model.product.ProductDetailResponse;
 import com.yasu.Foody.product.model.product.ProductResponse;
 import com.yasu.Foody.product.model.product.ProductSaveRequest;
 import com.yasu.Foody.product.model.ProductSellerResponse;
+import com.yasu.Foody.product.model.product.UpdateProductActive;
 import com.yasu.Foody.product.repository.ProductRepository;
+import com.yasu.Foody.product.repository.es.ProductEsRepository;
 import com.yasu.Foody.product.service.product.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.util.ResourceUtils;
@@ -33,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     private final ProductRepository productRepository;
+    private final ProductEsRepository productEsRepository;
     private final ProductDeliveryService productDeliveryServiceImpl;
     private final ProductAmountService productAmountService;
     private final ProductEsService productEsService;
@@ -41,7 +45,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Flux<ProductResponse> getAll() {
 
-        return productEsService.findAl().map(this::mapToDto);
+        return productEsService.findAl()
+                .filter(sd->sd.getActive())
+                .map(this::mapToDto);
 
     }
 
@@ -51,13 +57,25 @@ public class ProductServiceImpl implements ProductService {
         return productEsService.findAll();
 
     }
-
     @Override
-    public Mono<Product> findProductBy(String productCode) {
-        return productRepository.findProductBy(productCode);
+    public Mono<Product> deleteProduct(UpdateProductActive id) {
+        return productEsRepository.findById(id.getId())
+                .flatMap(product -> {
+                    product.setActive(id.isActive()); // Ürünün aktif durumunu güncelle
+                    return productEsRepository.save(product)
+                            .then(productRepository.findById(id.getId())
+                                    .flatMap(prd -> {
+                                        prd.setActive(id.isActive());
+                                        return productRepository.save(prd); // Elasticsearch için de güncelleme yap ve kaydet
+                                    }));
+                })
+                .switchIfEmpty(Mono.error(new AlreadyBoundException("BÖYLE BIR ÜRÜN YOK")));
     }
 
-    @Override
+
+
+
+    @Override// Bunuu este yapalıms
     public Mono<Product> findProductByProductCode(String productCode) {
         return productRepository.findProductByProductCode(productCode);
     }
@@ -68,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = Product.builder()
                 .id(productSaveRequest.getId())
-                .active(Boolean.TRUE)
+                .active(Boolean.FALSE)
                 .productCode(productSaveRequest.getProductCode())
                 .categoryId(productSaveRequest.getCategoryId())
                 .companyID(productSaveRequest.getSellerId())
@@ -114,19 +132,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Mono<Product> updateProductStock(Product product) {
-Product prd=Product.builder()  .id(product.getId())
-        .active(Boolean.TRUE)
-        .productCode(product.getProductCode())
-        .categoryId(product.getCategoryId())
-        .description(product.getDescription())
-        .features(product.getFeatures())
-        .name(product.getName())
-        .Price(product.getPrice())
-        .productStock(product.getProductStock())
-        .build();
-
-
-        return productRepository.save(prd);
+            return productEsRepository.findById(product.getId())
+                    .flatMap(prdEs -> {
+                prdEs.setProductStock(product.getProductStock());
+                return productEsRepository.save(prdEs).then(productRepository.findById(product.getId()).flatMap(prd->{
+                    prd.setProductStock(product.getProductStock());
+                    return productRepository.save(prd);
+                }));
+            });
     }
     private ProductResponse mapToDto(ProductEs productEs) {
         if(productEs==null) {
@@ -141,7 +154,7 @@ Product prd=Product.builder()  .id(product.getId())
                 .id(productEs.getId())
                 .description(productEs.getDescription())
                 .deliveryIn(productDeliveryServiceImpl.getDeliveryInfo(productEs.getId()))
-//                .categoryId(productEs.getCategory().getId())
+                .categoryId(productEs.getCategory().getId())
                 .available(productAmountService.getByProductId(productEs.getId()))
                 .freeDelivery(true)
                 .deliveryIn("3")

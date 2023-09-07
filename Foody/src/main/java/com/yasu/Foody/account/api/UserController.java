@@ -7,6 +7,7 @@ import com.yasu.Foody.account.entity.model.UserSaveReq;
 import com.yasu.Foody.account.repository.UserRepository;
 
 
+import com.yasu.Foody.product.model.product.UpdateProductActive;
 import com.yasu.Foody.security.dto.AuthResponse;
 import com.yasu.Foody.security.jwt.JWTUtil;
 
@@ -93,6 +94,13 @@ public class UserController {
 
         return ResponseEntity.ok(  productService.save(productSaveRequest));
     }
+    @PostMapping("/product/delete")
+    public  ResponseEntity<?> del(@Valid @RequestBody UpdateProductActive id){
+
+
+        return ResponseEntity.ok(  productService.deleteProduct(id));
+    }
+
 
     @GetMapping("/list")
     public Flux<UserEntity> getAllUsers(){

@@ -7,7 +7,7 @@
             <div class="product">
               <div class="row">
                 <div class="col-md-3">
-                  <img class="img-fluid mx-auto d-block image"  :src="getImageUrl(item.image)">
+                  <img class="img-fluid mx-auto d-block image"  :src="getImageUrl(item.id+item.productCode)">
                 </div>
                 <div class="col-md-6">
                   <div class="info">
