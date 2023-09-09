@@ -2,6 +2,7 @@ package com.yasu.Foody.account.service;
 
 import com.yasu.Foody.account.dto.LoginDto;
 import com.yasu.Foody.account.entity.AddressEntity;
+import com.yasu.Foody.account.entity.SellerUserEntity;
 import com.yasu.Foody.account.entity.UserEntity;
 import com.yasu.Foody.account.entity.model.SellerUserSaveReq;
 import com.yasu.Foody.account.entity.model.UserSaveReq;
@@ -17,6 +18,7 @@ public interface UserService {
     Mono<AddressEntity> createUser(UserSaveReq userSaveReq);
 
     Mono<UserEntity> findUserByEmail(String username);
+    Mono<SellerUserEntity> findUserById(String id);
 
     UserEntity findUserBy(String username);
 

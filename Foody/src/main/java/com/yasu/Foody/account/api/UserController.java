@@ -39,15 +39,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class UserController {
 
     private final UserService usersService;
-
-
-    private final UserRepository userRepository;
-
-
     private final JWTUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final ProductService productService;
-
     @PostMapping("/create")
     public Mono<ResponseEntity<?>> createUser( @Valid @RequestBody UserSaveReq entity){
         return usersService.createUser(entity)

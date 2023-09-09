@@ -25,13 +25,9 @@ public class ProductSaveRequest {
     private String features;
     private int available;
     private LinkedHashMap<moneyType ,BigDecimal> Price;
-
     private List<String> images;
-
     private String sellerId;
-
     private String categoryId;
-
     private int productStock;
 
 }

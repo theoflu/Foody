@@ -55,6 +55,7 @@ public class WebfluxSecurityConfiguration {
                                 .pathMatchers("/cart/save").permitAll()
                                 .pathMatchers("/products/add").permitAll()
                                 .pathMatchers("/products/update").permitAll()
+                                .pathMatchers("/products/company/{id}").permitAll()
 
                                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                                 .anyExchange().authenticated());

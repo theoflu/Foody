@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 public interface ProductEsService {
     Mono<ProductEs> saveNewProduct(Product product);
-
+    Flux<ProductEs> getCompanyProducts(String name);
      Flux<ProductEs> findAl();
      Flux<Product> findAll();
      Mono<ProductEs> finById(String id);

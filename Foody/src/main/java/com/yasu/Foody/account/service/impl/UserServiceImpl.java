@@ -115,6 +115,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserByEmail(username);
     }
 
+    @Override
+    public Mono<SellerUserEntity> findUserById(String id) {
+        return sellerUserRepository.findById(id);
+    }
 
 
     @Override

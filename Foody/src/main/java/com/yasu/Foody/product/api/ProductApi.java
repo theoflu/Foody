@@ -1,7 +1,9 @@
 package com.yasu.Foody.product.api;
 
 
+import com.yasu.Foody.account.repository.SellerUserRepository;
 import com.yasu.Foody.product.domain.Product;
+import com.yasu.Foody.product.domain.es.ProductEs;
 import com.yasu.Foody.product.model.product.ProductDetailResponse;
 import com.yasu.Foody.product.model.product.ProductResponse;
 import com.yasu.Foody.product.service.product.ProductService;
@@ -27,6 +29,10 @@ public class ProductApi {
 
     public Flux<ProductResponse> getAllProducts(){
         return productService.getAll();
+    }
+    @GetMapping("/company/{name}")
+    public  Flux<ProductEs> getCompanyProducts(@PathVariable("name")String name){
+        return productService.getCompanyProducts(name);
     }
     @GetMapping("/v1")
     @PreAuthorize("hasRole('ADMIN')")

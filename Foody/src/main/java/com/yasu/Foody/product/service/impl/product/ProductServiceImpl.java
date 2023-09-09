@@ -1,5 +1,6 @@
 package com.yasu.Foody.product.service.impl.product;
 
+import com.yasu.Foody.account.repository.SellerUserRepository;
 import com.yasu.Foody.filestore.service.FileStoreService;
 import com.yasu.Foody.product.domain.Product;
 import com.yasu.Foody.product.domain.ProductImage;
@@ -14,7 +15,7 @@ import com.yasu.Foody.product.repository.ProductRepository;
 import com.yasu.Foody.product.repository.es.ProductEsRepository;
 import com.yasu.Foody.product.service.product.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 
 import org.springframework.util.ResourceUtils;
@@ -41,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductAmountService productAmountService;
     private final ProductEsService productEsService;
     private final FileStoreService fileStoreService;
+    private final SellerUserRepository sellerUserRepository;
 
     @Override
     public Flux<ProductResponse> getAll() {
@@ -50,6 +52,12 @@ public class ProductServiceImpl implements ProductService {
                 .map(this::mapToDto);
 
     }
+
+    @Override
+    public Flux<ProductEs> getCompanyProducts(String name) {
+        return productEsService.getCompanyProducts(name);
+    }
+
 
     @Override
     public Flux<Product> getAl() {
@@ -99,11 +107,14 @@ public class ProductServiceImpl implements ProductService {
                 .build();
         savePic(productSaveRequest.getId()+productSaveRequest.getProductCode(),productSaveRequest.getImages());
 
-        return productRepository.save(product)
-                .flatMap(savedProduct -> {
-                    // savedProduct ile ilgili işlemleri gerçekleştirin
-                    return mapToDto(productEsService.saveNewProduct(savedProduct));
-                });
+        return sellerUserRepository.findById(product.getCompanyID()).flatMap(sd->{
+         return    productRepository.save(product)
+                    .flatMap(savedProduct -> {
+                        // savedProduct ile ilgili işlemleri gerçekleştirin
+                        return mapToDto(productEsService.saveNewProduct(savedProduct));
+                    });
+
+        }).switchIfEmpty(Mono.error(new  AlreadyBoundException("YOU ARE NOT SELLER!!")));
 
 
     }
@@ -144,7 +155,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductResponse mapToDto(ProductEs productEs) {
         if(productEs==null) {
             return null;
-        } //Resim gözükmüyor ona bi bakılacak
+        }
         ProductResponse productResponse =  ProductResponse.builder()
                 //TODO client request üzridn validate edilecek
 
@@ -161,7 +172,7 @@ public class ProductServiceImpl implements ProductService {
                 .features(productEs.getFeatures())
                 .productStock(productEs.getProductStock())
                 .image(productEs.getImages().get(0))
-                .seller(ProductSellerResponse.builder().id(productEs.getSeller().getId()).name(productEs.getSeller().getName()).build())
+                .seller(findSellername(productEs.getSeller().getId()).block())
                 .build();
 
         return productResponse;
@@ -186,8 +197,15 @@ public class ProductServiceImpl implements ProductService {
                 .features(productEs.getFeatures())
                 .productStock(productEs.getProductStock())
                 .image(productEs.getImages().get(0))
-                .seller(ProductSellerResponse.builder().id(productEs.getSeller().getId()).name(productEs.getSeller().getName()).build())
+                .seller(findSellername(productEs.getSeller().getId()).block())
                 .build());
     }
 
+    private Mono<ProductSellerResponse> findSellername(String id) {
+        return sellerUserRepository.findById(id)
+                .map(seller -> ProductSellerResponse.builder()
+                        .id(seller.getId())
+                        .name(seller.getSellerName())
+                        .build());
+    }
 }
