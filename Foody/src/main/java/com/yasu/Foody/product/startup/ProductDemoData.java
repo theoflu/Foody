@@ -29,10 +29,10 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.UUID;
+
 import java.util.stream.IntStream;
 
-import static java.util.UUID.randomUUID;
+
 
 @Slf4j
 @Component
@@ -51,7 +51,7 @@ public class ProductDemoData {
 
       // productRepository.deleteAll().block();
 
-        UUID countOfData=productService.count().block();
+        Long countOfData=productService.count().block();
 
         assert countOfData != null;
         if(countOfData.equals(0L)){
@@ -67,20 +67,20 @@ public class ProductDemoData {
                     {
                         put(moneyType.USD, BigDecimal.valueOf((i+1)*5));
                     }};
-                String uuid=UUID.randomUUID().toString();
+                String Long=Long.randomLong().toString();
                         byte[] file=null;
                         try {
 
                              file = Files.readAllBytes(ResourceUtils.getFile("classpath:product-images/foto.jpg").toPath());
 
                         }catch (IOException e) { log.error("File Read Error");}
-                        fileStoreService.saveImage(uuid,new ByteArrayInputStream(file));
+                        fileStoreService.saveImage(Long,new ByteArrayInputStream(file));
 
             ProductResponse response= productService.save(
                         ProductSaveRequest.builder()
-                                .sellerId("a"+randomUUID().toString())
-                                .id(randomUUID().toString())
-                                .productCode(i+randomUUID().toString())
+                                .sellerId("a"+randomLong().toString())
+                                .id(randomLong().toString())
+                                .productCode(i+randomLong().toString())
                                     .available(3)
                                 .description("Product Descip"+i)
                                 .categoryId(categoryResponse.getId())
@@ -88,7 +88,7 @@ public class ProductDemoData {
                                 .features("<li>Black Color </li>"+i)
                                 .Price(prc)
                                 .productStock(14+i)
-                                .images(List.of(uuid))
+                                .images(List.of(Long))
                                 .build());
 
 

@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
-import java.util.UUID;
+
 
 @Document(collection="cart")
 @Data
@@ -20,9 +20,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CartEntity {
     @Id
-    private UUID id;
-    private UUID userId;
-    private UUID productId;
+    private Long id;
+    private Long userId;
+    private Long productId;
     private Date createdTime;
     private String createdBy;
     private Date updatedAt;

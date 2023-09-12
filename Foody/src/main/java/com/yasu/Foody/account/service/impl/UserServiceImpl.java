@@ -16,6 +16,7 @@ import com.yasu.Foody.security.response.LoginMesage;
 
 
 import com.yasu.Foody.account.service.UserService;
+import kotlin.random.URandomKt;
 import lombok.RequiredArgsConstructor;
 
 
@@ -42,17 +43,20 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
 
 
-    private UUID userID(){
-        UUID user=UUID.randomUUID();
+    private Long userID(){
+        Random random=new Random();
+        Long user= (long) (random.nextDouble() * Long.MAX_VALUE);;
         return user;
     }
-    private UUID addressID(){
-        UUID adress=UUID.randomUUID();
-        return adress;
+    private Long addressID(){
+        Random random=new Random();
+        Long address=(long) (random.nextDouble() * Long.MAX_VALUE);;
+        return address;
     }
-    private UUID sUserID(){
-        UUID sID=UUID.randomUUID();
-        return sID;
+    private Long sUserID(){
+        Random random=new Random();
+        Long sUser= (long) (random.nextDouble() * Long.MAX_VALUE);;
+        return sUser;
     }
     @Override
     public Mono<AddressEntity> createUser(UserSaveReq userSaveReq){
@@ -128,7 +132,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<SellerUserEntity> findUserById(UUID id) {
+    public Mono<SellerUserEntity> findUserById(Long id) {
         return sellerUserRepository.findById(id);
     }
 

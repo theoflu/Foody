@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
-import java.util.UUID;
+
 
 @Data
 @Document(indexName = "cart")
@@ -20,10 +20,10 @@ import java.util.UUID;
 @Builder
 public class CartEs {
     @Id
-    private UUID id;
-    private UUID userId;
-    private UUID productId;
-    private UUID categoryId;
+    private Long id;
+    private Long userId;
+    private Long productId;
+    private Long categoryId;
     private Date createdTime;
     private String createdBy;
     private Date updatedAt;

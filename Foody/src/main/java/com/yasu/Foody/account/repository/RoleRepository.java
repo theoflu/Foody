@@ -9,6 +9,6 @@ import reactor.core.publisher.Mono;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface RoleRepository extends ReactiveMongoRepository <Role, UUID> {
+public interface RoleRepository extends ReactiveMongoRepository <Role, Long> {
     Mono<Role> findByName(ERole name);
 }

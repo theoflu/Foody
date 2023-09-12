@@ -16,7 +16,7 @@ public interface UserService {
     Mono<AddressEntity> createUser(UserSaveReq userSaveReq);
 
     Mono<UserEntity> findUserByEmail(String username);
-    Mono<SellerUserEntity> findUserById(UUID id);
+    Mono<SellerUserEntity> findUserById(Long id);
 
     UserEntity findUserBy(String username);
 

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserEntity implements UserDetails {
     @Id
-    private UUID id;//idleri UUID yap
+    private Long id;//idleri UUID yap
     private String userName;
     private String email;
     private String password;

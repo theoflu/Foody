@@ -3,7 +3,7 @@ package com.yasu.Foody.product.model;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.UUID;
+
 
 
 @Data
@@ -11,5 +11,5 @@ import java.util.UUID;
 public class ProductSellerResponse
 {
     private String name;
-    private UUID id;
+    private Long id;
 }

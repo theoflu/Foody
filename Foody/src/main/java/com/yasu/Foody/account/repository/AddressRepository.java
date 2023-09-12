@@ -8,6 +8,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public interface AddressRepository extends ReactiveMongoRepository<AddressEntity, UUID> {
+public interface AddressRepository extends ReactiveMongoRepository<AddressEntity, Long> {
     Mono<AddressEntity> findUserByAddress(String address);
 }

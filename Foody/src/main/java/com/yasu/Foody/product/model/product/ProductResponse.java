@@ -6,13 +6,13 @@ import lombok.Data;
 
 
 import java.math.BigDecimal;
-import java.util.UUID;
+
 
 @Data
 @Builder
 
 public class ProductResponse {
-    private UUID id;
+    private Long id;
     private String image;
     private String name;
     private  String productCode;//name+model

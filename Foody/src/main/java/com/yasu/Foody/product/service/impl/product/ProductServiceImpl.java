@@ -30,7 +30,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.rmi.AlreadyBoundException;
 import java.util.List;
-import java.util.UUID;
+
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,9 +48,11 @@ public class ProductServiceImpl implements ProductService {
     private final FileStoreService fileStoreService;
     private final SellerUserRepository sellerUserRepository;
 
-    private UUID productID(){
+    private Long productID(){
 
-        return UUID.randomUUID();
+        Random random=new Random();
+        Long product= (long) (random.nextDouble() * Long.MAX_VALUE);;
+        return product;
     }
 
     @Override
@@ -114,8 +117,8 @@ public class ProductServiceImpl implements ProductService {
                 .productImage(productSaveRequest.getImages().stream().map(it -> new ProductImage(ProductImage.ImageType.FEATURE, it)).collect(Collectors.toList()))//Resim listesindeki tüm elemanları getirip içinde dolaşmak içins
                 .build();
         savePic(productID()+productSaveRequest.getProductCode(),productSaveRequest.getImages());
-       Mono<SellerUserEntity> s=sellerUserRepository.findById(product.getCompanyID());
-        return s.flatMap(sd->{ //uuid şeysini çözcez burda değer boş dönüyor id olunca ama string arayınca dönüyor uuid'le alakalı long yapalım mümkünse
+       Mono<SellerUserEntity> s=sellerUserRepository.findById(1L);
+        return s.flatMap(sd->{ //Long şeysini çözcez burda değer boş dönüyor id olunca ama string arayınca dönüyor Long'le alakalı long yapalım mümkünse
 
          return    productRepository.save(product)
                     .flatMap(savedProduct -> {
@@ -130,9 +133,9 @@ public class ProductServiceImpl implements ProductService {
 
     private void savePic(String idpcode, List<String> images)  {
         try {
-            String uuid = idpcode;
+            String Long = idpcode;
             byte[] file = Files.readAllBytes(ResourceUtils.getFile("classpath:" + images.get(0)).toPath());
-            fileStoreService.saveImage(uuid, new ByteArrayInputStream(file));
+            fileStoreService.saveImage(Long, new ByteArrayInputStream(file));
         } catch (IOException e) {
             new AlreadyBoundException(e.getMessage());
         }
@@ -145,7 +148,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Mono<ProductDetailResponse> getProductDetail(UUID id) {
+    public Mono<ProductDetailResponse> getProductDetail(Long id) {
         return null;// this.mapToDto(productEsService.finById(id));
 
     }
@@ -210,7 +213,7 @@ public class ProductServiceImpl implements ProductService {
                 .build());
     }
 
-    private Mono<ProductSellerResponse> findSellername(UUID id) {
+    private Mono<ProductSellerResponse> findSellername(Long id) {
         return sellerUserRepository.findById(id)
                 .map(seller -> ProductSellerResponse.builder()
                         .id(seller.getId())

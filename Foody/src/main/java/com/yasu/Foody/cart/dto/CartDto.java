@@ -3,7 +3,7 @@ package com.yasu.Foody.cart.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.UUID;
+
 
 
 @Data
@@ -15,5 +15,5 @@ public class CartDto {
     private String address;
     private String productName;
     private  String productCode;//name+model
-    private UUID companyID;
+    private Long companyID;
 }

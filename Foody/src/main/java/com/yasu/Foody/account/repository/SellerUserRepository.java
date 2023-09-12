@@ -7,8 +7,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public interface SellerUserRepository extends ReactiveMongoRepository<SellerUserEntity, UUID> {
+public interface SellerUserRepository extends ReactiveMongoRepository<SellerUserEntity, Long> {
     Mono<SellerUserEntity> findBysellerName (String name);
-    Mono<SellerUserEntity> findSellerByUserId (UUID userId);
+    Mono<SellerUserEntity> findSellerByUserId (Long userId);
 
 }

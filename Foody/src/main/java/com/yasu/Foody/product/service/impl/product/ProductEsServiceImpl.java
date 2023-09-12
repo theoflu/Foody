@@ -27,7 +27,7 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.rmi.AlreadyBoundException;
 import java.util.LinkedHashMap;
-import java.util.UUID;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -59,7 +59,7 @@ public class ProductEsServiceImpl implements ProductEsService{
     @Override
     public Mono<ProductEs> saveNewProduct(Product product) {
         return getProductCategory(product.getCategoryId())
-                .flatMap(category -> findSellername(product.getCompanyID())
+                .flatMap(category -> findSellername(1L)
                         .flatMap(seller -> {
                             return productEsRepository.save(ProductEs.builder()
                                     .active(product.getActive())
@@ -77,7 +77,7 @@ public class ProductEsServiceImpl implements ProductEsService{
                         }));
     }
 
-    private Mono<CompanyEs> findSellername(UUID id) {
+    private Mono<CompanyEs> findSellername(Long id) {
 
          return userService.findUserById(id)
                  .map(seller -> CompanyEs.builder()
@@ -138,7 +138,7 @@ public class ProductEsServiceImpl implements ProductEsService{
     }
 
     @Override
-    public Mono<ProductEs> finById(UUID id) {
+    public Mono<ProductEs> finById(Long id) {
         return productEsRepository.findById(id);
     }
 }

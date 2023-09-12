@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.UUID;
+
 
 import com.yasu.Foody.product.domain.moneyType;
 
@@ -20,7 +20,7 @@ import com.yasu.Foody.product.domain.moneyType;
 
 
 public class ProductSaveRequest {
-    private UUID id;
+    private Long id;
     private String name;
     private  String productCode;//name+model
     private String description;
@@ -28,7 +28,7 @@ public class ProductSaveRequest {
     private int available;
     private LinkedHashMap<moneyType ,BigDecimal> Price;
     private List<String> images;
-    private UUID sellerId;
+    private Long sellerId;
     private String categoryId;
     private int productStock;
 

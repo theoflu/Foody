@@ -16,8 +16,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class SellerUserEntity {
     @Id
-    private UUID id;
-    private UUID userId;
+    private Long id;
+    private Long userId;
     private String vergiNo;
     private String sellerName;
     private String sellerAddress;

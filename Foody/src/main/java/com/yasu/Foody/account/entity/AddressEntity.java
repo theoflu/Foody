@@ -15,8 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AddressEntity {
     @Id
-    private UUID id;
-    private UUID UserId;
+    private Long id;
+    private Long UserId;
     private String AddressName;
     private String Address;
 

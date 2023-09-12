@@ -10,12 +10,12 @@ import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
 
-public interface ProductEsRepository extends ReactiveElasticsearchRepository<ProductEs,UUID> {
 
-    Flux<ProductEs> findBySellerId(UUID companyId);
-    Mono<ProductEs> findById(UUID uuid);
+public interface ProductEsRepository extends ReactiveElasticsearchRepository<ProductEs,Long> {
+
+    Flux<ProductEs> findBySellerId(Long companyId);
+    Mono<ProductEs> findById(Long Long);
 
 
 

@@ -12,7 +12,7 @@ import com.yasu.Foody.product.model.product.UpdateProductActive;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
+
 
 public interface ProductService {
      Mono<Product> deleteProduct(UpdateProductActive id);
@@ -25,7 +25,7 @@ public interface ProductService {
 
    Mono<Long> count();
 
-   Mono<ProductDetailResponse> getProductDetail(UUID id);
+   Mono<ProductDetailResponse> getProductDetail(Long id);
 
  Mono<Product> updateProductStock(Product product);
 

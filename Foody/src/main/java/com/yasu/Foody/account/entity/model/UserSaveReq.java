@@ -14,7 +14,7 @@ import java.util.UUID;
 @Data
 @Builder
 public class UserSaveReq {
-    private UUID id;
+    private Long id;
     private String userName;
     private String email;
     private String password;
@@ -24,7 +24,7 @@ public class UserSaveReq {
     private String addressName;
     private List<ERole> roles;
 
-    private UUID userId;
+    private Long userId;
     private String vergiNo;
     private String sellerName;
     private String sellerAddress;

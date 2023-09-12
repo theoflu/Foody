@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.UUID;
+
 
 @Data
 @Document(indexName = "product")
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class ProductEs {
 
     @Id
-    private UUID id;
+    private Long id;
     private String name;
     private  String productCode;//name+model
     private  String description;

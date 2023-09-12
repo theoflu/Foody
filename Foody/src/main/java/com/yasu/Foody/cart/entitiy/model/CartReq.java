@@ -9,12 +9,12 @@ import org.springframework.data.annotation.Id;
 
 
 import java.util.Date;
-import java.util.UUID;
+
 
 @Data
 @Builder
 public class CartReq {
-    private UUID id;
+    private Long id;
     private String productCode;
     private String username;
 }
