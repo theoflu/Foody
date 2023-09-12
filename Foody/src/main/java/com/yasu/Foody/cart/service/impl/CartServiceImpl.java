@@ -22,6 +22,7 @@ import reactor.core.publisher.Mono;
 
 import java.rmi.AlreadyBoundException;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,10 @@ public class CartServiceImpl implements CartService {
     private final CartEsService cartEsService;
     private final CartRepository cartRepository;
 
+    private UUID cartID(){
+
+        return UUID.randomUUID();
+    }
     public Mono<CartResponse> save(CartReq cartReq) {
         Mono<UserEntity> userEntityMono = userService.findUserByEmail(cartReq.getUsername());
 
@@ -48,7 +53,7 @@ public class CartServiceImpl implements CartService {
                     }
 
                     CartEntity cartEntity = CartEntity.builder()
-                            .id(cartReq.getId())
+                            .id(cartID())
                             .userId(userEntity.getId())
                             .productId(product.getId())
                             .createdTime(new Date())

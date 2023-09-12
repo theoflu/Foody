@@ -4,13 +4,15 @@ import com.yasu.Foody.account.entity.roles.ERole;
 import lombok.Builder;
 import lombok.Data;
 
+
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
 public class SellerUserSaveReq {
 
-    private String id;
+    private UUID id;
     private String userName;
     private String email;
     private String password;
@@ -20,7 +22,7 @@ public class SellerUserSaveReq {
     private String addressName;
     private List<ERole> roles;
 
-    private Long userId;
+    private UUID userId;
     private String vergiNo;
     private String sellerName;
     private String sellerAddress;

@@ -4,7 +4,6 @@ import com.yasu.Foody.account.dto.LoginDto;
 import com.yasu.Foody.account.entity.AddressEntity;
 import com.yasu.Foody.account.entity.SellerUserEntity;
 import com.yasu.Foody.account.entity.UserEntity;
-import com.yasu.Foody.account.entity.model.SellerUserSaveReq;
 import com.yasu.Foody.account.entity.model.UserSaveReq;
 import com.yasu.Foody.account.entity.roles.ERole;
 
@@ -13,18 +12,17 @@ import com.yasu.Foody.account.repository.RoleRepository;
 import com.yasu.Foody.account.repository.SellerUserRepository;
 import com.yasu.Foody.account.repository.UserRepository;
 
-import com.yasu.Foody.account.response.LoginMesage;
+import com.yasu.Foody.security.response.LoginMesage;
 
 
 import com.yasu.Foody.account.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import java.rmi.AlreadyBoundException;
 import java.util.*;
@@ -43,6 +41,19 @@ public class UserServiceImpl implements UserService {
 
     private final RoleRepository roleRepository;
 
+
+    private UUID userID(){
+        UUID user=UUID.randomUUID();
+        return user;
+    }
+    private UUID addressID(){
+        UUID adress=UUID.randomUUID();
+        return adress;
+    }
+    private UUID sUserID(){
+        UUID sID=UUID.randomUUID();
+        return sID;
+    }
     @Override
     public Mono<AddressEntity> createUser(UserSaveReq userSaveReq){
 
@@ -53,11 +64,12 @@ public class UserServiceImpl implements UserService {
             String c = this.passwordEncoder.encode(userSaveReq.getPassword());
             AddressEntity address=AddressEntity.builder()
                     .AddressName(userSaveReq.getAddressName())
-                    .UserId(userSaveReq.getId())
+                    .UserId(userID())
                     .Address(userSaveReq.getAddress())
+                    .id(addressID())
                     .build();
 
-            UserEntity userEntity = UserEntity.builder().id(userSaveReq.getId())
+            UserEntity userEntity = UserEntity.builder().id(userID())
                     .userName(userSaveReq.getUserName())
                     .email(userSaveReq.getEmail())
                     .password(c)
@@ -69,8 +81,8 @@ public class UserServiceImpl implements UserService {
             SellerUserEntity sellerUserEntity;
             if(userSaveReq.getUserType().equals("Seller")) {
                      sellerUserEntity = SellerUserEntity
-                        .builder()
-                        .userId(userSaveReq.getId())
+                        .builder().id(sUserID())
+                        .userId(userID())
                         .vergiNo(userSaveReq.getVergiNo())
                         .sellerName(userSaveReq.getSellerName())
                         .sellerAddress(userSaveReq.getSellerAddress())
@@ -116,7 +128,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<SellerUserEntity> findUserById(String id) {
+    public Mono<SellerUserEntity> findUserById(UUID id) {
         return sellerUserRepository.findById(id);
     }
 

@@ -4,11 +4,13 @@ import com.yasu.Foody.account.entity.UserEntity;
 import com.yasu.Foody.product.domain.Product;
 import com.yasu.Foody.product.domain.category.Category;
 import lombok.*;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Document(collection="cart")
 @Data
@@ -18,9 +20,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class CartEntity {
     @Id
-    private String id;
-    private String userId;
-    private String productId;
+    private UUID id;
+    private UUID userId;
+    private UUID productId;
     private Date createdTime;
     private String createdBy;
     private Date updatedAt;

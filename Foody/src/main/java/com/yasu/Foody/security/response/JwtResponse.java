@@ -1,4 +1,4 @@
-package com.yasu.Foody.account.response;
+package com.yasu.Foody.security.response;
 
 import lombok.Data;
 

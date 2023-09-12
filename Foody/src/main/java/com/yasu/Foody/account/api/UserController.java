@@ -86,7 +86,7 @@ public class UserController {
     public  ResponseEntity<?> seller(@Valid @RequestBody ProductSaveRequest productSaveRequest){
 
 
-        return ResponseEntity.ok(  productService.save(productSaveRequest));
+        return ResponseEntity.ok( productService.save(productSaveRequest));
     }
     @PostMapping("/product/delete")
     public  ResponseEntity<?> del(@Valid @RequestBody UpdateProductActive id){

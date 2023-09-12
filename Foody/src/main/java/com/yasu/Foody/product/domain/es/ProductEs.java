@@ -5,12 +5,14 @@ package com.yasu.Foody.product.domain.es;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import com.yasu.Foody.product.domain.moneyType;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Document(indexName = "product")
@@ -18,7 +20,8 @@ import java.util.List;
 @Builder
 public class ProductEs {
 
-    private String id;
+    @Id
+    private UUID id;
     private String name;
     private  String productCode;//name+model
     private  String description;

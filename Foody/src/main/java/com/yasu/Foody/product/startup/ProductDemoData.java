@@ -51,7 +51,7 @@ public class ProductDemoData {
 
       // productRepository.deleteAll().block();
 
-        Long countOfData=productService.count().block();
+        UUID countOfData=productService.count().block();
 
         assert countOfData != null;
         if(countOfData.equals(0L)){

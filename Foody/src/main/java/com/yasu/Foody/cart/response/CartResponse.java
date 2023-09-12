@@ -6,17 +6,19 @@ import com.yasu.Foody.product.domain.category.Category;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.boot.convert.DataSizeUnit;
+
 import org.springframework.data.annotation.Id;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Builder
 public class CartResponse {
-    private String id;
-    private String userId;
-    private String  productId;
+    private UUID id;
+    private UUID userId;
+    private UUID  productId;
     private Category category;
     private Date createdTime;
     private String createdBy;

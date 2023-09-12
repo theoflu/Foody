@@ -1,5 +1,6 @@
 package com.yasu.Foody.product.service.impl.product;
 
+import com.yasu.Foody.account.entity.SellerUserEntity;
 import com.yasu.Foody.account.repository.SellerUserRepository;
 import com.yasu.Foody.filestore.service.FileStoreService;
 import com.yasu.Foody.product.domain.Product;
@@ -16,6 +17,8 @@ import com.yasu.Foody.product.repository.es.ProductEsRepository;
 import com.yasu.Foody.product.service.product.*;
 import lombok.RequiredArgsConstructor;
 
+
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import org.springframework.util.ResourceUtils;
@@ -44,6 +47,11 @@ public class ProductServiceImpl implements ProductService {
     private final FileStoreService fileStoreService;
     private final SellerUserRepository sellerUserRepository;
 
+    private UUID productID(){
+
+        return UUID.randomUUID();
+    }
+
     @Override
     public Flux<ProductResponse> getAll() {
 
@@ -71,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
                 .flatMap(product -> {
                     product.setActive(id.isActive()); // Ürünün aktif durumunu güncelle
                     return productEsRepository.save(product)
-                            .then(productRepository.findById(id.getId())
+                            .then(productRepository.findProductById(id.getId())
                                     .flatMap(prd -> {
                                         prd.setActive(id.isActive());
                                         return productRepository.save(prd); // Elasticsearch için de güncelleme yap ve kaydet
@@ -93,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
     public Mono<ProductResponse> save(ProductSaveRequest productSaveRequest) {
 
         Product product = Product.builder()
-                .id(productSaveRequest.getId())
+                .id(productID())
                 .active(Boolean.TRUE)
                 .productCode(productSaveRequest.getProductCode())
                 .categoryId(productSaveRequest.getCategoryId())
@@ -105,9 +113,10 @@ public class ProductServiceImpl implements ProductService {
                 .productStock(productSaveRequest.getProductStock())
                 .productImage(productSaveRequest.getImages().stream().map(it -> new ProductImage(ProductImage.ImageType.FEATURE, it)).collect(Collectors.toList()))//Resim listesindeki tüm elemanları getirip içinde dolaşmak içins
                 .build();
-        savePic(productSaveRequest.getId()+productSaveRequest.getProductCode(),productSaveRequest.getImages());
+        savePic(productID()+productSaveRequest.getProductCode(),productSaveRequest.getImages());
+       Mono<SellerUserEntity> s=sellerUserRepository.findById(product.getCompanyID());
+        return s.flatMap(sd->{ //uuid şeysini çözcez burda değer boş dönüyor id olunca ama string arayınca dönüyor uuid'le alakalı long yapalım mümkünse
 
-        return sellerUserRepository.findById(product.getCompanyID()).flatMap(sd->{
          return    productRepository.save(product)
                     .flatMap(savedProduct -> {
                         // savedProduct ile ilgili işlemleri gerçekleştirin
@@ -136,7 +145,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Mono<ProductDetailResponse> getProductDetail(String id) {
+    public Mono<ProductDetailResponse> getProductDetail(UUID id) {
         return null;// this.mapToDto(productEsService.finById(id));
 
     }
@@ -162,7 +171,7 @@ public class ProductServiceImpl implements ProductService {
                 .moneySymbol(moneyType.USD.getSymbol())
                 .productCode(productEs.getProductCode())
                 .name(productEs.getName())
-                .id(productEs.getId())
+                .id(productID())
                 .description(productEs.getDescription())
                 .deliveryIn(productDeliveryServiceImpl.getDeliveryInfo(productEs.getId()))
                 .categoryId(productEs.getCategory().getId())
@@ -187,7 +196,7 @@ public class ProductServiceImpl implements ProductService {
                 .moneySymbol(moneyType.USD.getSymbol())
                 .productCode(productEs.getProductCode())
                 .name(productEs.getName())
-                .id(productEs.getId())
+                .id(productID())
                 .description(productEs.getDescription())
                 .deliveryIn(productDeliveryServiceImpl.getDeliveryInfo(productEs.getId()))
                 .categoryId(productEs.getCategory().getId())
@@ -201,7 +210,7 @@ public class ProductServiceImpl implements ProductService {
                 .build());
     }
 
-    private Mono<ProductSellerResponse> findSellername(String id) {
+    private Mono<ProductSellerResponse> findSellername(UUID id) {
         return sellerUserRepository.findById(id)
                 .map(seller -> ProductSellerResponse.builder()
                         .id(seller.getId())

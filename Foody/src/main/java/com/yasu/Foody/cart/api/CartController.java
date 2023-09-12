@@ -21,7 +21,7 @@ public class CartController {
     public Mono<ResponseEntity<CartResponse>> save(@RequestBody CartReq cartReq) {
         return cartService.save(cartReq)
                 .map(cartResponse -> ResponseEntity.ok(cartResponse))
-                .onErrorReturn(ResponseEntity.notFound().build());
+               ;
     }
 
 }

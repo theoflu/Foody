@@ -3,6 +3,7 @@ package com.yasu.Foody.account.entity;
 import com.yasu.Foody.account.entity.roles.ERole;
 import com.yasu.Foody.account.entity.roles.Role;
 import lombok.*;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserEntity implements UserDetails {
     @Id
-    private String id;//idleri long yap
+    private UUID id;//idleri UUID yap
     private String userName;
     private String email;
     private String password;

@@ -4,13 +4,15 @@ import com.yasu.Foody.product.model.ProductSellerResponse;
 import lombok.Builder;
 import lombok.Data;
 
+
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Data
 @Builder
 
 public class ProductResponse {
-    private String id;
+    private UUID id;
     private String image;
     private String name;
     private  String productCode;//name+model
@@ -22,7 +24,7 @@ public class ProductResponse {
     private  String deliveryIn;
     private BigDecimal price;
     private String moneySymbol;
-    private  String categoryId;
+    private String categoryId;
     private int productStock;
 
 

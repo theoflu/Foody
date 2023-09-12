@@ -19,6 +19,7 @@ import com.yasu.Foody.product.service.impl.category.CategoryServiceImpl;
 import com.yasu.Foody.product.service.product.ProductEsService;
 import lombok.RequiredArgsConstructor;
 
+
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -26,6 +27,7 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.rmi.AlreadyBoundException;
 import java.util.LinkedHashMap;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,7 +77,7 @@ public class ProductEsServiceImpl implements ProductEsService{
                         }));
     }
 
-    private Mono<CompanyEs> findSellername(String id) {
+    private Mono<CompanyEs> findSellername(UUID id) {
 
          return userService.findUserById(id)
                  .map(seller -> CompanyEs.builder()
@@ -136,7 +138,7 @@ public class ProductEsServiceImpl implements ProductEsService{
     }
 
     @Override
-    public Mono<ProductEs> finById(String id) {
+    public Mono<ProductEs> finById(UUID id) {
         return productEsRepository.findById(id);
     }
 }

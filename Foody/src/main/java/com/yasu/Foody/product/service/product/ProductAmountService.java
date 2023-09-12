@@ -1,6 +1,9 @@
 package com.yasu.Foody.product.service.product;
 
+
+import java.util.UUID;
+
 public interface ProductAmountService {
 
-    int getByProductId(String id);
+    int getByProductId(UUID id);
 }
