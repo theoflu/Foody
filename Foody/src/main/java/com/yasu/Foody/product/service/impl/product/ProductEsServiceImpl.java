@@ -59,7 +59,7 @@ public class ProductEsServiceImpl implements ProductEsService{
     @Override
     public Mono<ProductEs> saveNewProduct(Product product) {
         return getProductCategory(product.getCategoryId())
-                .flatMap(category -> findSellername(1L)
+                .flatMap(category -> findSellername(product.getCompanyID())
                         .flatMap(seller -> {
                             return productEsRepository.save(ProductEs.builder()
                                     .active(product.getActive())

@@ -117,7 +117,7 @@ public class ProductServiceImpl implements ProductService {
                 .productImage(productSaveRequest.getImages().stream().map(it -> new ProductImage(ProductImage.ImageType.FEATURE, it)).collect(Collectors.toList()))//Resim listesindeki tüm elemanları getirip içinde dolaşmak içins
                 .build();
         savePic(productID()+productSaveRequest.getProductCode(),productSaveRequest.getImages());
-       Mono<SellerUserEntity> s=sellerUserRepository.findById(1L);
+       Mono<SellerUserEntity> s=sellerUserRepository.findById(product.getCompanyID());
         return s.flatMap(sd->{ //Long şeysini çözcez burda değer boş dönüyor id olunca ama string arayınca dönüyor Long'le alakalı long yapalım mümkünse
 
          return    productRepository.save(product)
