@@ -2,8 +2,11 @@ package com.yasu.Foody.account.api;
 
 
 import com.yasu.Foody.account.entity.UserEntity;
+import com.yasu.Foody.account.entity.model.AssignRoleReq;
 import com.yasu.Foody.account.entity.model.UserSaveReq;
 
+import com.yasu.Foody.account.entity.roles.ERole;
+import com.yasu.Foody.account.entity.roles.Role;
 import com.yasu.Foody.account.repository.UserRepository;
 
 
@@ -28,6 +31,9 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.security.PublicKey;
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 
@@ -49,6 +55,17 @@ public class UserController {
                 ;
 
 
+    }
+
+    @PostMapping("/roleAdd")
+    public  ResponseEntity<?> roleAdd(@RequestBody Role role){
+
+      return ResponseEntity.ok(  usersService.roleAdd(role));
+    }
+    @PostMapping("/assignRole")
+    public  ResponseEntity<?> assignRole(@RequestBody AssignRoleReq req){
+
+        return ResponseEntity.ok(  usersService.assignRole(req));
     }
 
     @PostMapping("/login")

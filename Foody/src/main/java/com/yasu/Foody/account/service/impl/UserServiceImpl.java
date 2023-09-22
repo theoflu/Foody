@@ -1,32 +1,40 @@
 package com.yasu.Foody.account.service.impl;
 
 import com.yasu.Foody.account.dto.LoginDto;
+import com.yasu.Foody.account.dto.UserDto;
 import com.yasu.Foody.account.entity.AddressEntity;
 import com.yasu.Foody.account.entity.SellerUserEntity;
 import com.yasu.Foody.account.entity.UserEntity;
+import com.yasu.Foody.account.entity.model.AssignRoleReq;
 import com.yasu.Foody.account.entity.model.UserSaveReq;
 import com.yasu.Foody.account.entity.roles.ERole;
 
+import com.yasu.Foody.account.entity.roles.Role;
 import com.yasu.Foody.account.repository.AddressRepository;
 import com.yasu.Foody.account.repository.RoleRepository;
 import com.yasu.Foody.account.repository.SellerUserRepository;
 import com.yasu.Foody.account.repository.UserRepository;
 
+import com.yasu.Foody.security.dto.Message;
 import com.yasu.Foody.security.response.LoginMesage;
 
 
 import com.yasu.Foody.account.service.UserService;
-import kotlin.random.URandomKt;
+
 import lombok.RequiredArgsConstructor;
 
 
+import lombok.extern.java.Log;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.rmi.AlreadyBoundException;
+import java.security.PublicKey;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 @Service
@@ -42,88 +50,126 @@ public class UserServiceImpl implements UserService {
 
     private final RoleRepository roleRepository;
 
+    private final AtomicLong userIdCounter = new AtomicLong(0);
+    private final AtomicLong addressIdCounter = new AtomicLong(0);
+    private final AtomicLong sUserIdCounter = new AtomicLong(0);
 
     private Long userID(){
-        Random random=new Random();
-        Long user= (long) (random.nextDouble() * Long.MAX_VALUE);;
-        return user;
+         return userIdCounter.incrementAndGet();
     }
     private Long addressID(){
-        Random random=new Random();
-        Long address=(long) (random.nextDouble() * Long.MAX_VALUE);;
-        return address;
+        return addressIdCounter.incrementAndGet();
     }
     private Long sUserID(){
-        Random random=new Random();
-        Long sUser= (long) (random.nextDouble() * Long.MAX_VALUE);;
-        return sUser;
+
+        return sUserIdCounter.incrementAndGet();
     }
     @Override
-    public Mono<AddressEntity> createUser(UserSaveReq userSaveReq){
-
+    public Mono<AddressEntity> createUser(UserSaveReq userSaveReq) {
         if (userSaveReq.getUserName().isEmpty() || userSaveReq.getEmail().isEmpty()) {
-          return   Mono.error(new AlreadyBoundException("Boş değer "));
-        }
-        else {
+            return Mono.error(new AlreadyBoundException("Boş değer giremezsiniz "));
+        } else {
             String c = this.passwordEncoder.encode(userSaveReq.getPassword());
-            AddressEntity address=AddressEntity.builder()
-                    .AddressName(userSaveReq.getAddressName())
-                    .UserId(userID())
-                    .Address(userSaveReq.getAddress())
-                    .id(addressID())
+
+            return sellerNameChecker(userSaveReq.getSellerName())
+                    .flatMap(message -> {
+                        if ("VAR".equals(message.getContent())) {
+                            return Mono.error(new AlreadyBoundException("Bu satıcı ismi zaten var!"));
+                        } else {
+                            // Satıcı adı kontrolü başarılı olduğunda createUser işlemini gerçekleştirin.
+                            return createUserInternal(userSaveReq, c);
+                        }
+                    })
+                    .switchIfEmpty(Mono.error(new AlreadyBoundException("Satıcı adı kontrolü başarısız oldu!")));
+        }
+    }
+
+    private Mono<AddressEntity> createUserInternal(UserSaveReq userSaveReq, String encryptedPassword) {
+        AddressEntity address = AddressEntity.builder()
+                .AddressName(userSaveReq.getAddressName())
+                .UserId(userID())
+                .Address(userSaveReq.getAddress())
+                .id(addressID())
+                .build();
+
+        UserEntity userEntity = UserEntity.builder().id(userID())
+                .userName(userSaveReq.getUserName())
+                .email(userSaveReq.getEmail())
+                .password(encryptedPassword)
+                .cellphone(userSaveReq.getCellphone())
+                .userType(userSaveReq.getUserType())
+                .enabled(true)
+                .roles(List.of(ERole.ROLE_USER))
+                .build();
+
+        if (userSaveReq.getUserType().equals("Seller")) {
+            SellerUserEntity sellerUserEntity = SellerUserEntity.builder().id(sUserID())
+                    .userId(userEntity.getId())
+                    .vergiNo(userSaveReq.getVergiNo())
+                    .sellerName(userSaveReq.getSellerName())
+                    .sellerAddress(userSaveReq.getSellerAddress())
                     .build();
 
-            UserEntity userEntity = UserEntity.builder().id(userID())
-                    .userName(userSaveReq.getUserName())
-                    .email(userSaveReq.getEmail())
-                    .password(c)
-                    .cellphone(userSaveReq.getCellphone())
-                    .userType(userSaveReq.getUserType())
-                    .enabled(true)
-                    .roles(List.of(ERole.ROLE_USER))
-                    .build();
-            SellerUserEntity sellerUserEntity;
-            if(userSaveReq.getUserType().equals("Seller")) {
-                     sellerUserEntity = SellerUserEntity
-                        .builder().id(sUserID())
-                        .userId(userID())
-                        .vergiNo(userSaveReq.getVergiNo())
-                        .sellerName(userSaveReq.getSellerName())
-                        .sellerAddress(userSaveReq.getSellerAddress())
-                        .build();
-                return userRepository.findUserByEmail(userSaveReq.getEmail())
-                        .flatMap(__ -> Mono.error(new AlreadyBoundException("Dayı sen burdasın ")))
-                        .switchIfEmpty(Mono.defer(() -> {
-                            return userRepository.save(userEntity)
-                                    .flatMap(savedUser -> {
-                                        address.setUserId(savedUser.getId());
-                                        Mono<AddressEntity> addressEntityMono = addressRepository.save(address);
-                                        sellerUserEntity.setUserId(savedUser.getId()); // SellerUserEntity'ye de UserID ekleyin
-                                        return sellerUserRepository.save(sellerUserEntity)
-                                                .then(addressEntityMono); // AddressEntity'nin tamamlanmasını bekleyin
-                                    });
-                        }))
-                        .cast(AddressEntity.class);
-            }
             return userRepository.findUserByEmail(userSaveReq.getEmail())
                     .flatMap(__ -> Mono.error(new AlreadyBoundException("Dayı sen burdasın ")))
                     .switchIfEmpty(Mono.defer(() -> {
-                        // Adresi kaydetmek için Mono<AddressEntity> oluştur
-                        Mono<UserEntity> userSaveMono =userRepository.save(userEntity);
-                                // Kullanıcıyı kaydetmek için Mono<UserEntity> oluştur
+                        return userRepository.save(userEntity)
+                                .flatMap(savedUser -> {
+                                    address.setUserId(savedUser.getId());
+                                    Mono<AddressEntity> addressEntityMono = addressRepository.save(address);
+                                    sellerUserEntity.setUserId(savedUser.getId());
+                                    return sellerUserRepository.save(sellerUserEntity)
+                                            .then(addressEntityMono);
+                                });
+                    }))
+                    .cast(AddressEntity.class);
+        } else {
+            return userRepository.findUserByEmail(userSaveReq.getEmail())
+                    .flatMap(__ -> Mono.error(new AlreadyBoundException("Dayı sen burdasın ")))
+                    .switchIfEmpty(Mono.defer(() -> {
+                        Mono<UserEntity> userSaveMono = userRepository.save(userEntity);
                         Mono<AddressEntity> addressEntityMono = userSaveMono.flatMap(savedAddress -> {
-                            // AddressEntity'nin id'sini UserEntity'de ayarla
                             address.setUserId(savedAddress.getId());
                             return addressRepository.save(address);
                         });
-                        // Kullanıcı kaydetme işlemi tamamlandığında userSaveMono'yu dön
                         return addressEntityMono;
                     }))
                     .cast(AddressEntity.class);
+        }
+    }
+   @Override
+    public Mono<Role> roleAdd( Role eRole){
+       return roleRepository.save(eRole);
+    }
+
+    @Override
+    public Mono<UserDto> assignRole(AssignRoleReq req) {
+        return userRepository.findById(req.getId())
+                .switchIfEmpty(Mono.error(new AlreadyBoundException("Kullanıcı bulunamadı.")))
+                .flatMap(userEntity -> {
+                    userEntity.setRoles(req.getRoles());
+                    // Entity'yi güncelle
+                  return this.convertToDTO(userRepository.save(userEntity)) ; // Entity'yi DTO'ya dönüştür
+
+                });
+    }
+    public Mono<UserDto> convertToDTO(Mono<UserEntity> userEntity) {
+        if(userEntity==null) {
+            return null;
+        }
+     return    userEntity.map(userEntity1 -> UserDto.builder()
+                .userName(userEntity1.getUsername())
+                .cellphone(userEntity1.getCellphone())
+                .enabled(userEntity1.getEnabled())
+                .email(userEntity1.getEmail())
+                .build());
+    }
 
 
-
-        }//    return Mono.error(new AlreadyBoundException("Dayı sen burdasın aq"));
+    private Mono<Message> sellerNameChecker(String sellername) {
+        return sellerUserRepository.findBysellerName(sellername)
+                .flatMap(sellerUser -> Mono.just(new Message("VAR"))) // Satıcı adı bulunduğunda
+                .switchIfEmpty(Mono.just(new Message("YOK"))); // Satıcı adı bulunamadığında
     }
     @Override
     public Mono<UserEntity> findUserByEmail(String username) {

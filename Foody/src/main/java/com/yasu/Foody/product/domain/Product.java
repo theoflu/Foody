@@ -27,7 +27,6 @@ public class Product {
     private  String productCode;//name+model
     private  String description;
     private  Long companyID;//companyId'im sellerUser'daki id olacak o kullanıcı company olacak
-    //
     private  String features;
     private LinkedHashMap<moneyType ,BigDecimal> Price;
     private  String categoryId;

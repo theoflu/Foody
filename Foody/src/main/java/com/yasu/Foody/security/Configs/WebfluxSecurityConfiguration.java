@@ -50,6 +50,8 @@ public class WebfluxSecurityConfiguration {
                                 .pathMatchers("/user/create").permitAll()
                                 .pathMatchers("/user/v1login").permitAll()
                                 .pathMatchers("/user/product/add").permitAll()
+                                .pathMatchers("/user/roleAdd").permitAll()
+                                .pathMatchers("/user/assignRole").permitAll()
                                 .pathMatchers("/user/product/delete").permitAll()
                                 .pathMatchers("/filestore/{id}").permitAll()
                                 .pathMatchers("/cart/save").permitAll()
@@ -66,8 +68,6 @@ public class WebfluxSecurityConfiguration {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000/");
-
-
         config.addAllowedHeader("*");
         config.addAllowedMethod("OPTIONS");
         config.addAllowedMethod("HEAD");
@@ -76,7 +76,6 @@ public class WebfluxSecurityConfiguration {
         config.addAllowedMethod("POST");
         config.addAllowedMethod("DELETE");
         config.addAllowedMethod("PATCH");
-
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();

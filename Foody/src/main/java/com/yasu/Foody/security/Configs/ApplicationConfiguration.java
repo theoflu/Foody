@@ -37,13 +37,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfiguration {
 
-    private final UserRepository reactiveUserRepository;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    private final UserRepository reactiveUserRepository;
     /**
      * Returns a ReactiveUserDetailsService bean that retrieves user details from the database.
      *

@@ -31,10 +31,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAll() ;
     }
 
-    @Override
-    public Mono<Long> count() {
-        return categoryRepository.count();
-    }
 
     @Override
     public  CategoryResponse save(CategorySaveRequest categorySaveRequest) {

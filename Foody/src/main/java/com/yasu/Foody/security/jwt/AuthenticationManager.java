@@ -26,13 +26,6 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
     private final JWTUtil jwtUtil;
     private final ReactiveUserDetailsService userDetailsService;
 
-    /**
-     * Authenticates the JWT token in the input {@link Authentication} object and returns an authenticated {@link Authentication} object.
-     *
-     * @param authentication the input {@link Authentication} object containing the JWT token
-     * @return a {@link Mono} object containing the authenticated {@link Authentication} object
-     * @throws RuntimeException if the user is not found
-     */
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
         String token = authentication.getCredentials().toString();
@@ -49,6 +42,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
                 .map(authenticationToken -> (Authentication) authenticationToken)
                 .switchIfEmpty(Mono.error(new RuntimeException("User not found")));
     }
+
 
     /*
      * Detailed explanation:

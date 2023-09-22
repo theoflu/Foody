@@ -44,7 +44,7 @@ public class ProductApi {
     }
 
     @GetMapping("/{id}")
-    public Mono<ProductDetailResponse> getProductDetail(@PathVariable("id" ) Long id){
+    public Mono<ProductResponse> getProductDetail(@PathVariable("id" ) Long id){
         return productService.getProductDetail(id);
     }
 

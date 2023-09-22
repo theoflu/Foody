@@ -31,7 +31,7 @@ import java.nio.file.Files;
 import java.rmi.AlreadyBoundException;
 import java.util.List;
 
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,12 +47,10 @@ public class ProductServiceImpl implements ProductService {
     private final ProductEsService productEsService;
     private final FileStoreService fileStoreService;
     private final SellerUserRepository sellerUserRepository;
-
+    private AtomicLong productIdCounter = new AtomicLong(0);
     private Long productID(){
 
-        Random random=new Random();
-        Long product= (long) (random.nextDouble() * Long.MAX_VALUE);;
-        return product;
+      return  productIdCounter.incrementAndGet();
     }
 
     @Override
@@ -81,11 +79,11 @@ public class ProductServiceImpl implements ProductService {
         return productEsRepository.findById(id.getId())
                 .flatMap(product -> {
                     product.setActive(id.isActive()); // Ürünün aktif durumunu güncelle
-                    return productEsRepository.save(product)
+                    return productEsRepository.save(product)// Elasticsearch için  güncelleme yap ve kaydet
                             .then(productRepository.findProductById(id.getId())
                                     .flatMap(prd -> {
                                         prd.setActive(id.isActive());
-                                        return productRepository.save(prd); // Elasticsearch için de güncelleme yap ve kaydet
+                                        return productRepository.save(prd); // repos için de güncelleme yap ve kaydet
                                     }));
                 })
                 .switchIfEmpty(Mono.error(new AlreadyBoundException("BÖYLE BIR ÜRÜN YOK")));
@@ -94,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
 
 
 
-    @Override// Bunuu este yapalıms
+    @Override//
     public Mono<Product> findProductByProductCode(String productCode) {
         return productRepository.findProductByProductCode(productCode);
     }
@@ -118,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
                 .build();
         savePic(productID()+productSaveRequest.getProductCode(),productSaveRequest.getImages());
        Mono<SellerUserEntity> s=sellerUserRepository.findById(product.getCompanyID());
-        return s.flatMap(sd->{ //Long şeysini çözcez burda değer boş dönüyor id olunca ama string arayınca dönüyor Long'le alakalı long yapalım mümkünse
+        return s.flatMap(sd->{
 
          return    productRepository.save(product)
                     .flatMap(savedProduct -> {
@@ -132,13 +130,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private void savePic(String idpcode, List<String> images)  {
-        try {
-            String Long = idpcode;
-            byte[] file = Files.readAllBytes(ResourceUtils.getFile("classpath:" + images.get(0)).toPath());
-            fileStoreService.saveImage(Long, new ByteArrayInputStream(file));
-        } catch (IOException e) {
-            new AlreadyBoundException(e.getMessage());
-        }
+            try {
+                String Long = idpcode;
+                for(int i =0;i<images.size();i++){
+                    byte[] file = Files.readAllBytes(ResourceUtils.getFile("classpath:" + images.get(i)).toPath());
+                    fileStoreService.saveImage(Long, new ByteArrayInputStream(file));
+                }
+
+            } catch (IOException e) {
+                new AlreadyBoundException(e.getMessage());
+            }
 
 }
 
@@ -148,8 +149,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Mono<ProductDetailResponse> getProductDetail(Long id) {
-        return null;// this.mapToDto(productEsService.finById(id));
+    public Mono<ProductResponse> getProductDetail(Long id) {
+        return this.mapToDto(productEsService.finById(id));
 
     }
 
@@ -186,7 +187,6 @@ public class ProductServiceImpl implements ProductService {
                 .image(productEs.getImages().get(0))
                 .seller(findSellername(productEs.getSeller().getId()).block())
                 .build();
-
         return productResponse;
     }
     private Mono<ProductResponse> mapToDto(Mono<ProductEs> productEsMono) {

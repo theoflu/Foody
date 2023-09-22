@@ -10,12 +10,8 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
-  },
-  {
-    path: '/product',
-    name: 'Product',
-    component: Product
-  }, {
+  }
+  , {
     path: '/detail/:id',
     name: 'ProductDetail',
     component: ProductDetail
@@ -43,6 +39,12 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: RegisterView
+  },
+
+  {
+    path: '/product',
+    name: 'Product',
+    component: Product
   }
 ]
 

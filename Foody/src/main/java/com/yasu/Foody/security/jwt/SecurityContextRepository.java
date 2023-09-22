@@ -45,18 +45,18 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
      * @param exchange the {@link ServerWebExchange} object
      * @return a {@link Mono} object containing the {@link SecurityContext} object
      */
-    @Override
-    public Mono<SecurityContext> load(ServerWebExchange exchange) {
-        String authHeader = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION);
-        return Mono.justOrEmpty(authHeader)
-                .filter(header -> header.startsWith("Bearer "))
-                .flatMap(header -> {
-                            String token = header.substring(7);
-                            log.info("token from `header.substring(7)` : {}", token);
-                            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(token, token);
-                            return authenticationManager.authenticate(authentication)
-                                    .map(SecurityContextImpl::new);
-                        }
-                );
-    }
+        @Override
+        public Mono<SecurityContext> load(ServerWebExchange exchange) {
+            String authHeader = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION);
+            return Mono.justOrEmpty(authHeader)
+                    .filter(header -> header.startsWith("Bearer "))
+                    .flatMap(header -> {
+                                String token = header.substring(7);
+                                log.info("token from `header.substring(7)` : {}", token);
+                                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(token, token);
+                                return authenticationManager.authenticate(authentication)
+                                        .map(SecurityContextImpl::new);
+                            }
+                    );
+        }
 }

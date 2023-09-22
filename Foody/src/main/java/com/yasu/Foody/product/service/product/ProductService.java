@@ -19,14 +19,10 @@ public interface ProductService {
     Flux<ProductResponse> getAll();
     Flux<ProductEs> getCompanyProducts(String name);
     Flux<Product> getAl();
-
     Mono<Product> findProductByProductCode(String productCode);
    Mono<ProductResponse> save(ProductSaveRequest productSaveRequest);
-
    Mono<Long> count();
-
-   Mono<ProductDetailResponse> getProductDetail(Long id);
-
+   Mono<ProductResponse> getProductDetail(Long id);
  Mono<Product> updateProductStock(Product product);
 
 

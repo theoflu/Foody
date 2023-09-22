@@ -16,6 +16,6 @@ public interface CategoryService {
 
     Flux<Category> getAll();
     Mono<Category> getById(String id);
-    Mono<Long> count();
+
     CategoryResponse save(CategorySaveRequest categorySaveRequest);
 }
