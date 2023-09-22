@@ -1,8 +1,11 @@
 package com.yasu.Foody.account.api;
 
 
+import com.yasu.Foody.account.entity.EsVerificationCode;
 import com.yasu.Foody.account.entity.UserEntity;
 import com.yasu.Foody.account.entity.model.AssignRoleReq;
+import com.yasu.Foody.account.entity.model.UserActivateReq;
+import com.yasu.Foody.account.entity.model.UserDeleteReq;
 import com.yasu.Foody.account.entity.model.UserSaveReq;
 
 import com.yasu.Foody.account.entity.roles.ERole;
@@ -12,6 +15,7 @@ import com.yasu.Foody.account.repository.UserRepository;
 
 import com.yasu.Foody.product.model.product.UpdateProductActive;
 import com.yasu.Foody.security.dto.AuthResponse;
+import com.yasu.Foody.security.dto.Message;
 import com.yasu.Foody.security.jwt.JWTUtil;
 
 
@@ -68,10 +72,27 @@ public class UserController {
         return ResponseEntity.ok(  usersService.assignRole(req));
     }
 
+    @PostMapping("/delete")
+    public Mono<ResponseEntity<?>> userDelete(@RequestBody UserDeleteReq req){
+
+        return Mono.just(ResponseEntity.ok(  usersService.userDelete(req)));
+    }
+    @PostMapping("/activationCode")
+    public Mono<ResponseEntity<?>> activationCode(@RequestBody UserActivateReq req){
+
+        return Mono.just(ResponseEntity.ok(  usersService.activationCode(req)));
+    }
+    @PostMapping("/activate")
+    public Mono<ResponseEntity<?>> activateAccount(@RequestBody EsVerificationCode req){
+
+        return Mono.just(ResponseEntity.ok(  usersService.verificationCode(req)));
+    }
+
     @PostMapping("/login")
     public Mono<ResponseEntity<AuthResponse>> loginUser( @RequestBody UserEntity loginDto){
 
         return usersService.findUserByEmail(loginDto.getUsername())
+                .filter(users-> users.getEnabled())
                 .filter(userDetails ->
                         passwordEncoder.matches(
                                 loginDto.getPassword(),
@@ -83,6 +104,7 @@ public class UserController {
 
 
     }
+
     /*
     @PostMapping("/login")
     public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest authRequest) {

@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message extends RuntimeException {
+public class Messag extends RuntimeException {
     private String content;
-
+    private String error;
 
 }

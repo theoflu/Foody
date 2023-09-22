@@ -47,6 +47,8 @@ public class WebfluxSecurityConfiguration {
                 .authorizeExchange(authorizeExchangeSpec ->
                         authorizeExchangeSpec
                                 .pathMatchers("/user/login").permitAll()
+                                .pathMatchers("/user/delete").permitAll()
+                                .pathMatchers("/user/*").permitAll()
                                 .pathMatchers("/user/create").permitAll()
                                 .pathMatchers("/user/v1login").permitAll()
                                 .pathMatchers("/user/product/add").permitAll()

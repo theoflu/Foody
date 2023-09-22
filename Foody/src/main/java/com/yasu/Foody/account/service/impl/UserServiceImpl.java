@@ -1,20 +1,23 @@
 package com.yasu.Foody.account.service.impl;
 
+import com.yasu.Foody.Mail.MailService;
 import com.yasu.Foody.account.dto.LoginDto;
 import com.yasu.Foody.account.dto.UserDto;
 import com.yasu.Foody.account.entity.AddressEntity;
+import com.yasu.Foody.account.entity.EsVerificationCode;
 import com.yasu.Foody.account.entity.SellerUserEntity;
 import com.yasu.Foody.account.entity.UserEntity;
 import com.yasu.Foody.account.entity.model.AssignRoleReq;
+import com.yasu.Foody.account.entity.model.UserActivateReq;
+import com.yasu.Foody.account.entity.model.UserDeleteReq;
 import com.yasu.Foody.account.entity.model.UserSaveReq;
 import com.yasu.Foody.account.entity.roles.ERole;
 
 import com.yasu.Foody.account.entity.roles.Role;
-import com.yasu.Foody.account.repository.AddressRepository;
-import com.yasu.Foody.account.repository.RoleRepository;
-import com.yasu.Foody.account.repository.SellerUserRepository;
-import com.yasu.Foody.account.repository.UserRepository;
+import com.yasu.Foody.account.repository.*;
 
+import com.yasu.Foody.account.service.VerificationCodeService;
+import com.yasu.Foody.security.dto.Messag;
 import com.yasu.Foody.security.dto.Message;
 import com.yasu.Foody.security.response.LoginMesage;
 
@@ -24,15 +27,13 @@ import com.yasu.Foody.account.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 
-import lombok.extern.java.Log;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.rmi.AlreadyBoundException;
-import java.security.PublicKey;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -47,6 +48,9 @@ public class UserServiceImpl implements UserService {
     private final AddressRepository addressRepository;
     private final SellerUserRepository sellerUserRepository;
 
+    private final MailService mailService;
+    private final VerificationCodeService verificationCodeService;
+    private final EsVerificationCodeRepo esVerificationCodeRepo;
 
     private final RoleRepository roleRepository;
 
@@ -137,7 +141,10 @@ public class UserServiceImpl implements UserService {
                     .cast(AddressEntity.class);
         }
     }
-   @Override
+
+
+
+    @Override
     public Mono<Role> roleAdd( Role eRole){
        return roleRepository.save(eRole);
     }
@@ -153,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
                 });
     }
-    public Mono<UserDto> convertToDTO(Mono<UserEntity> userEntity) {
+    private Mono<UserDto> convertToDTO(Mono<UserEntity> userEntity) {
         if(userEntity==null) {
             return null;
         }
@@ -164,6 +171,57 @@ public class UserServiceImpl implements UserService {
                 .email(userEntity1.getEmail())
                 .build());
     }
+
+    @Override
+    public Mono<Message> userDelete(UserDeleteReq req) {
+        return userRepository.findById(req.getId())
+                .flatMap(user -> {
+                    if (!user.getEnabled()) {
+                        return Mono.error(new Message("Kullanıcı devre dışı zaten"));
+                    }
+
+                    user.setEnabled(false);
+
+                    return userRepository.save(user)
+                            .thenReturn(new Message("Kullanıcı hesabı başarıyla devre dışı bırakıldı"));
+                })
+                .switchIfEmpty(Mono.error(new Message("Kullanıcı bulunamadı")));
+    }
+
+
+    @Override
+     public   Mono<Message> activationCode(UserActivateReq userActivateReq){
+        return userRepository.findUserByEmail(userActivateReq.getEmail())
+                .map(user->
+                {
+                  //  user.setPassword(passwordEncoder.encode(userActivateReq.getPassword()));
+                        String code=  verificationCodeService.randomCode(user.getId(),user.getEmail());
+                        mailService.sendMail("yusuf-oflu61@hotmail.com",code);
+                 return new Message("Kullanıcı Onay Kodu Gönderildi.");
+
+
+                })
+                .switchIfEmpty(Mono.error(new Message("Kullanıcı bulunamadı")));
+    }
+    @Override
+    public Mono<UserEntity> verificationCode(EsVerificationCode esVerificationCode) {
+        return esVerificationCodeRepo.findByUserId(esVerificationCode.getUserId()).flatMap(userVcode -> {
+            if (esVerificationCode.getCode().equals(userVcode.getCode())) {
+                return userRepository.findById(userVcode.getUserId()).flatMap(user -> {
+                    user.setEnabled(true);
+                    return userRepository.save(user);
+                });
+            }
+            return Mono.error(new Message("Kullanıcı Onay Kodu Doğru Girilmedi."));
+        });
+    }
+
+
+
+    private Mono<Message> updatePassword(){
+        return null;
+    }
+
 
 
     private Mono<Message> sellerNameChecker(String sellername) {
