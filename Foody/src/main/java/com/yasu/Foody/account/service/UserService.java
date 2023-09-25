@@ -6,10 +6,7 @@ import com.yasu.Foody.account.entity.AddressEntity;
 import com.yasu.Foody.account.entity.EsVerificationCode;
 import com.yasu.Foody.account.entity.SellerUserEntity;
 import com.yasu.Foody.account.entity.UserEntity;
-import com.yasu.Foody.account.entity.model.AssignRoleReq;
-import com.yasu.Foody.account.entity.model.UserActivateReq;
-import com.yasu.Foody.account.entity.model.UserDeleteReq;
-import com.yasu.Foody.account.entity.model.UserSaveReq;
+import com.yasu.Foody.account.entity.model.*;
 import com.yasu.Foody.account.entity.roles.Role;
 import com.yasu.Foody.security.dto.Message;
 import com.yasu.Foody.security.model.User;
@@ -34,5 +31,8 @@ public interface UserService {
     Mono<Message>  userDelete(UserDeleteReq req);
     Mono<Message> activationCode(UserActivateReq userActivateReq);
     Mono<UserEntity> verificationCode(EsVerificationCode esVerificationCode);
+    Mono<UserEntity> UpdatePassword(UpdatePassReq updatePassReq);
+    Mono<?> ForgetPassword(UpdatePassReq updatePassReq);
+    Mono<Message> sellerNameChecker(String sellername);
 }
 

@@ -7,10 +7,7 @@ import com.yasu.Foody.account.entity.AddressEntity;
 import com.yasu.Foody.account.entity.EsVerificationCode;
 import com.yasu.Foody.account.entity.SellerUserEntity;
 import com.yasu.Foody.account.entity.UserEntity;
-import com.yasu.Foody.account.entity.model.AssignRoleReq;
-import com.yasu.Foody.account.entity.model.UserActivateReq;
-import com.yasu.Foody.account.entity.model.UserDeleteReq;
-import com.yasu.Foody.account.entity.model.UserSaveReq;
+import com.yasu.Foody.account.entity.model.*;
 import com.yasu.Foody.account.entity.roles.ERole;
 
 import com.yasu.Foody.account.entity.roles.Role;
@@ -34,6 +31,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.rmi.AlreadyBoundException;
+import java.security.PublicKey;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -194,9 +192,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserByEmail(userActivateReq.getEmail())
                 .map(user->
                 {
-                  //  user.setPassword(passwordEncoder.encode(userActivateReq.getPassword()));
                         String code=  verificationCodeService.randomCode(user.getId(),user.getEmail());
-                        mailService.sendMail("yusuf-oflu61@hotmail.com",code);
+                        mailService.sendMail(user.getEmail(),code);
                  return new Message("Kullanıcı Onay Kodu Gönderildi.");
 
 
@@ -216,15 +213,32 @@ public class UserServiceImpl implements UserService {
         });
     }
 
-
-
-    private Mono<Message> updatePassword(){
-        return null;
+    @Override
+    public Mono<?> ForgetPassword(UpdatePassReq updatePassReq){
+        return esVerificationCodeRepo.findByUserId(updatePassReq.getId()).flatMap(user->{
+           return userRepository.findById(user.getUserId()).flatMap(mail->{
+               String code=verificationCodeService.randomCode(mail.getId(),mail.getEmail());
+                   mailService.sendMail(mail.getEmail(),code);
+              return Mono.just("Kod Gönderildi");
+           });
+        });
+    }
+    @Override
+    public Mono<UserEntity> UpdatePassword(UpdatePassReq updatePassReq) {
+        return esVerificationCodeRepo.findByUserId(updatePassReq.getId()).flatMap(userVcode -> {
+            if (updatePassReq.getCode().equals(userVcode.getCode())) {
+                return userRepository.findById(userVcode.getUserId()).flatMap(user -> {
+                    user.setPassword(passwordEncoder.encode(updatePassReq.getPassword()));
+                    return userRepository.save(user);
+                });
+            }
+            return Mono.error(new Message("Kullanıcı Onay Kodu Doğru Girilmedi."));
+        });
     }
 
 
-
-    private Mono<Message> sellerNameChecker(String sellername) {
+    @Override
+    public Mono<Message> sellerNameChecker(String sellername) {
         return sellerUserRepository.findBysellerName(sellername)
                 .flatMap(sellerUser -> Mono.just(new Message("VAR"))) // Satıcı adı bulunduğunda
                 .switchIfEmpty(Mono.just(new Message("YOK"))); // Satıcı adı bulunamadığında

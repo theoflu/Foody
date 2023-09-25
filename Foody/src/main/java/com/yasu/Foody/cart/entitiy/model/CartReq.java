@@ -17,4 +17,5 @@ public class CartReq {
     private Long id;
     private String productCode;
     private String username;
+    private int count;
 }

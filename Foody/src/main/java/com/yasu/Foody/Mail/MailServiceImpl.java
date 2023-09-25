@@ -18,9 +18,6 @@ import java.io.File;
 public class MailServiceImpl implements MailService{
 
     private final JavaMailSender mailSender;
-
-
-
     @Override
     public String sendMail( String whoTO, String code) {
         SimpleMailMessage message=new SimpleMailMessage();

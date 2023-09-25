@@ -63,9 +63,9 @@ public class CartServiceImpl implements CartService {
                             .createdBy(cartReq.getUsername())
                             .build();
 
-                    // Ürün stoğunu güncelle
-                    product.setProductStock(product.getProductStock() - 1);
 
+                    // Ürün stoğunu güncelle
+                    product.setProductStock(product.getProductStock() - cartReq.getCount());
                     return cartRepository.save(cartEntity)
                             .flatMap(savedCart -> productService.updateProductStock(product)
                                     .thenReturn(savedCart))

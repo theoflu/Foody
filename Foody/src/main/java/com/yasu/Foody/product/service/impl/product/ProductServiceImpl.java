@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Flux<ProductEs> getCompanyProducts(String name) {
-        return productEsService.getCompanyProducts(name);
+        return productEsService.getCompanyProducts(name).filter(prd->prd.getActive().equals(true));
     }
 
 
