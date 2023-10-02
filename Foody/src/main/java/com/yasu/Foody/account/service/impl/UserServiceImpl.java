@@ -24,21 +24,20 @@ import com.yasu.Foody.account.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 
-import org.springframework.mail.SimpleMailMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.rmi.AlreadyBoundException;
-import java.security.PublicKey;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 
 @Service
 @RequiredArgsConstructor
-
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
     private final AtomicLong sUserIdCounter = new AtomicLong(0);
 
     private Long userID(){
-         return userIdCounter.incrementAndGet();
+        return userIdCounter.incrementAndGet();
     }
     private Long addressID(){
         return addressIdCounter.incrementAndGet();
@@ -66,6 +65,7 @@ public class UserServiceImpl implements UserService {
 
         return sUserIdCounter.incrementAndGet();
     }
+
     @Override
     public Mono<AddressEntity> createUser(UserSaveReq userSaveReq) {
         if (userSaveReq.getUserName().isEmpty() || userSaveReq.getEmail().isEmpty()) {
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<Role> roleAdd( Role eRole){
-       return roleRepository.save(eRole);
+        return roleRepository.save(eRole);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class UserServiceImpl implements UserService {
                 .flatMap(userEntity -> {
                     userEntity.setRoles(req.getRoles());
                     // Entity'yi güncelle
-                  return this.convertToDTO(userRepository.save(userEntity)) ; // Entity'yi DTO'ya dönüştür
+                    return this.convertToDTO(userRepository.save(userEntity)) ; // Entity'yi DTO'ya dönüştür
 
                 });
     }
@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
         if(userEntity==null) {
             return null;
         }
-     return    userEntity.map(userEntity1 -> UserDto.builder()
+        return    userEntity.map(userEntity1 -> UserDto.builder()
                 .userName(userEntity1.getUsername())
                 .cellphone(userEntity1.getCellphone())
                 .enabled(userEntity1.getEnabled())
@@ -188,13 +188,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-     public   Mono<Message> activationCode(UserActivateReq userActivateReq){
+    public   Mono<Message> activationCode(UserActivateReq userActivateReq){
         return userRepository.findUserByEmail(userActivateReq.getEmail())
                 .map(user->
                 {
-                        String code=  verificationCodeService.randomCode(user.getId(),user.getEmail());
-                        mailService.sendMail(user.getEmail(),code);
-                 return new Message("Kullanıcı Onay Kodu Gönderildi.");
+                    String code=  verificationCodeService.randomCode(user.getId(),user.getEmail());
+                    mailService.sendMail(user.getEmail(),code);
+                    return new Message("Kullanıcı Onay Kodu Gönderildi.");
 
 
                 })
@@ -216,11 +216,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<?> ForgetPassword(UpdatePassReq updatePassReq){
         return esVerificationCodeRepo.findByUserId(updatePassReq.getId()).flatMap(user->{
-           return userRepository.findById(user.getUserId()).flatMap(mail->{
-               String code=verificationCodeService.randomCode(mail.getId(),mail.getEmail());
-                   mailService.sendMail(mail.getEmail(),code);
-              return Mono.just("Kod Gönderildi");
-           });
+            return userRepository.findById(user.getUserId()).flatMap(mail->{
+                String code=verificationCodeService.randomCode(mail.getId(),mail.getEmail());
+                mailService.sendMail(mail.getEmail(),code);
+                return Mono.just("Kod Gönderildi");
+            });
         });
     }
     @Override
@@ -296,7 +296,7 @@ public class UserServiceImpl implements UserService {
 
 
 
-    }
+}
 
 
 
