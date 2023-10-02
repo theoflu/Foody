@@ -56,11 +56,16 @@ public class UserController {
     private final JWTUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final ProductService productService;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @PostMapping("/create")
     public Mono<ResponseEntity<?>> createUser( @Valid @RequestBody UserSaveReq entity){
         return usersService.createUser(entity)
-                .map(user -> ResponseEntity.status(HttpStatus.CREATED).build())
-                ;
+                .map(user -> {
+
+                    logger.debug("User " + entity.getEmail() +" signed up.");
+
+                   return ResponseEntity.status(HttpStatus.CREATED).build();
+                });
 
 
     }
@@ -91,7 +96,6 @@ public class UserController {
 
         return Mono.just(ResponseEntity.ok(  usersService.verificationCode(req)));
     }
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 
     @PostMapping("/login")
@@ -105,7 +109,7 @@ public class UserController {
                                 userDetails.getPassword()
                         )
                 ).map(userDetails -> {
-                    logger.debug("User " + loginDto.getEmail() +" logged in.", loginDto);
+                    logger.debug("User " + loginDto.getEmail() +" logged in.");
                    return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails),userDetails));})
                 .switchIfEmpty(Mono.just(ResponseEntity.status(NOT_FOUND).build()));
 
