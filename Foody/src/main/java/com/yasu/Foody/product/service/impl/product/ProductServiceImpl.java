@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     public Flux<ProductResponse> getAll() {
 
         return productEsService.findAl()
-                .filter(sd->sd.getActive())
+                .filter(p->p.getActive())
                 .map(this::mapToDto);
 
     }
@@ -175,7 +175,7 @@ public class ProductServiceImpl implements ProductService {
                 .moneySymbol(moneyType.USD.getSymbol())
                 .productCode(productEs.getProductCode())
                 .name(productEs.getName())
-                .id(productID())
+                .id(productEs.getId())
                 .description(productEs.getDescription())
                 .deliveryIn(productDeliveryServiceImpl.getDeliveryInfo(productEs.getId()))
                 .categoryId(productEs.getCategory().getId())
@@ -184,6 +184,8 @@ public class ProductServiceImpl implements ProductService {
                 .deliveryIn("3")
                 .features(productEs.getFeatures())
                 .productStock(productEs.getProductStock())
+                .active(productEs.getActive())
+
                 .image(productEs.getImages().get(0))
                 .seller(findSellername(productEs.getSeller().getId()).block())
                 .build();
@@ -199,7 +201,8 @@ public class ProductServiceImpl implements ProductService {
                 .moneySymbol(moneyType.USD.getSymbol())
                 .productCode(productEs.getProductCode())
                 .name(productEs.getName())
-                .id(productID())
+                .id(productEs.getId())
+                .active(productEs.getActive())
                 .description(productEs.getDescription())
                 .deliveryIn(productDeliveryServiceImpl.getDeliveryInfo(productEs.getId()))
                 .categoryId(productEs.getCategory().getId())

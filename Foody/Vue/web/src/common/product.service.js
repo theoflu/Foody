@@ -4,5 +4,7 @@ export function getById(id) {
 }
 export function getAll(){
         return get('products');
-
+}
+export function getSellerAllProducts(seller){
+    return get('products/company/'+ seller)
 }

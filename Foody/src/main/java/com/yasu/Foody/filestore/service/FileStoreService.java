@@ -3,7 +3,9 @@ package com.yasu.Foody.filestore.service;
 import com.yasu.Foody.filestore.service.s3.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.init.ResourceReaderRepositoryPopulator;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -25,6 +27,11 @@ public class FileStoreService {
     public void deleteImage(String id) {
         fileService.delete(id);
 
+    }
+
+    public ResponseEntity deleteBucket(String name){
+        fileService.deleteBucket(name);
+return ResponseEntity.ok(200);
     }
 
 

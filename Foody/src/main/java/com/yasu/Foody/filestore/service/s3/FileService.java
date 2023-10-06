@@ -6,5 +6,6 @@ import java.io.InputStream;
 public interface FileService {
     void save(String id, String ContentType,InputStream file);
     void delete(String id);
+    void deleteBucket(String name);
     byte[] get(String id);
 }

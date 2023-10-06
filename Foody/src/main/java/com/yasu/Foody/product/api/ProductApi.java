@@ -38,7 +38,7 @@ public class ProductApi {
         return productService.getCompanyProducts(name);
     }
     @GetMapping("/v1")
-    @PreAuthorize("hasRole('ADMIN')")
+  //  @PreAuthorize("hasRole('ADMIN')")
     public Flux<Product> getAlProducts(){
         return productService.getAl();
     }

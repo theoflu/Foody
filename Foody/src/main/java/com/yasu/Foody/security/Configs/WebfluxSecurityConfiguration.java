@@ -62,7 +62,7 @@ public class WebfluxSecurityConfiguration {
                                 .pathMatchers("/products/company/{id}").permitAll()
 
                                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                                .anyExchange().authenticated());
+                                .anyExchange().permitAll());
         return httpSecurity.build();
     }
     @Bean

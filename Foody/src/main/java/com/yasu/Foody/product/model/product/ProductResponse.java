@@ -21,6 +21,7 @@ public class ProductResponse {
     private  String features;
     private  int available;
     private  boolean freeDelivery;
+    private  boolean active;
     private  String deliveryIn;
     private BigDecimal price;
     private String moneySymbol;

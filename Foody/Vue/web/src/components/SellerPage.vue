@@ -7,7 +7,9 @@
             <div class="product">
               <div class="row">
                 <div class="col-md-3">
+
                   <img class="img-fluid mx-auto d-block image"  :src="getImageUrl(item.id+item.productCode)">
+
                 </div>
                 <div class="col-md-6">
                   <div class="info">
@@ -16,7 +18,7 @@
                         <div class="product-name">
                           <a class="product-name" v-bind:href="'/detail/' + item.id">{{ item.name }}</a>
                           <div class="product-info">
-                            <div class="product-info-detail">{{ item.description  + "os"+item.id }}</div>
+                            <div class="product-info-detail">{{ item.description }}</div>
                             <div class="product-info-detail">Seller: <a class="value" v-bind:href="item.seller.id">{{
                                 item.seller.name
                               }}</a>
@@ -66,32 +68,32 @@
 </template>
 
 <script>
-import {getAll} from "@/common/product.service";
+import { getSellerAllProducts} from "@/common/product.service";
 import {BASE_URL} from "@/common/config";
 
 export default {
-  name: 'ProductListComponent',
+  name: 'SellerPage',
   components: {},
-
-  data(){
+  data() {
     return {
-      products:[]
+      products: []
     }
   },
-   created(){
+  created() {
     this.getProducts();
-  },methods:{
-    getProducts(){
-      getAll().then(response=>{
-        this.products=response.data;
-      })
+  }, methods: {
+    getProducts() {
+      getSellerAllProducts(this.$route.params.seller).then(response => {
+        this.products = response.data;
+      });
     },
     getImageUrl(id) {
       return BASE_URL + 'filestore/' + id;
     }
   }
-
 }
+
+
 </script>
 
 

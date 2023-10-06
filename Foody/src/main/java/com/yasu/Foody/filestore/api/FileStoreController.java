@@ -8,6 +8,7 @@ import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
@@ -31,4 +32,10 @@ public class FileStoreController {
             return response.writeWith(Flux.just(factory.wrap(img)));
         });
     }
+    @PostMapping("/deleteBucket/{name}")
+    public ResponseEntity<?> deleteBucket(@PathVariable("name")String name){
+
+       return ResponseEntity.ok(fileStoreService.deleteBucket(name));
+    }
+
 }

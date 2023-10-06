@@ -1,18 +1,15 @@
 package com.yasu.Foody.filestore.service.s3;
 
 import com.yasu.Foody.filestore.config.S3ConfigProperties;
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
+import io.minio.errors.MinioException;
+import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-
-import java.awt.*;
-import java.io.File;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -49,6 +46,52 @@ minioClient.putObject(obj);
             log.error("File remove error",e);}
 
     }
+
+    @Override
+    public void deleteBucket(String name) {
+        deleteAllObjectsInBucket(name);
+    }
+
+    public void deleteAllObjectsInBucket(String bucketName) {
+        try {
+            // Kovanın içindeki tüm nesneleri listeleyin
+            Iterable<Result<Item>> results = minioClient.listObjects(
+                    ListObjectsArgs.builder()
+                            .bucket(bucketName)
+                            .build()
+            );
+
+            List<String> objectNames = new LinkedList();
+
+
+            // Tüm nesne adlarını alın
+            for (Result<Item> result : results) {
+                objectNames.add(result.get().objectName());
+
+
+            }
+
+            // Tüm nesneleri silin
+            for (String objectName : objectNames) {
+               delete(objectName);
+                System.out.println("Nesne silindi: " + objectName);
+            }
+
+            System.out.println("Kova içindeki tüm nesneler başarıyla silindi.");
+
+        }
+        catch (MinioException e) {
+            // MinioException ile ilgili işlemler
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            // IllegalArgumentException ile ilgili işlemler
+            e.printStackTrace();
+        } catch (Exception e) {
+            // Diğer istisnalar ile ilgili genel işlemler
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public byte[] get(String id) {
