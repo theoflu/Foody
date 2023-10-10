@@ -12,6 +12,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Data
@@ -22,8 +24,7 @@ public class CartEs {
     @Id
     private Long id;
     private Long userId;
-    private Long productId;
-    private Long categoryId;
+    private Map<String,Integer> productId;    private Long categoryId;
     private Date createdTime;
     private String createdBy;
     private Date updatedAt;

@@ -32,4 +32,22 @@ services:
       MINIO_ROOT_PASSWORD: HK-MINIO-PASS
     command: server /data
 
+  redis:
+      image: redis:latest
+      restart: always
+      ports:
+        - "6379:6379"
+      volumes:
+        - /path/to/local/dаta:/root/redis
+        - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
+      environment:
+        - REDIS_PASSWORD=my-password
+        - REDIS_PORT=6379
+        - REDIS_DATABASES=16
 
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - '8001:8001'
+    volumes:
+      - ./Users/ajeetraina/data/redisinsight:/db

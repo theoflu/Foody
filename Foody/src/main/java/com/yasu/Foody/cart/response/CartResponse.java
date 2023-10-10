@@ -11,6 +11,7 @@ import org.springframework.data.annotation.Id;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.Map;
 
 
 @Data
@@ -18,7 +19,7 @@ import java.util.Date;
 public class CartResponse {
     private Long id;
     private Long userId;
-    private Long  productId;
+    private Map<String,Integer> productId;
     private Category category;
     private Date createdTime;
     private String createdBy;

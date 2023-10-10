@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Document(collection="cart")
@@ -22,7 +24,7 @@ public class CartEntity {
     @Id
     private Long id;
     private Long userId;
-    private Long productId;
+    private Map<String,Integer> productId;
     private Date createdTime;
     private String createdBy;
     private Date updatedAt;

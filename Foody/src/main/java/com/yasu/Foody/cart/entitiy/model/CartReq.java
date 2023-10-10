@@ -9,13 +9,15 @@ import org.springframework.data.annotation.Id;
 
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 
 @Data
 @Builder
 public class CartReq {
     private Long id;
-    private String productCode;
+    private HashMap<String,Integer> productCC; //CodeAndCount
     private String username;
-    private int count;
+
 }
