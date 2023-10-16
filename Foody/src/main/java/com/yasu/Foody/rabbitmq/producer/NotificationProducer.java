@@ -52,7 +52,7 @@ public class NotificationProducer {
 
 
     public void sendToQueue(Notification notification)  {
-        System.out.println("CallerPerson Sent ID : " + notification.getNotificationID());// her mssage gonderdiginde gonderdigi messageın id'sini ekrana yazsın
+        System.out.println("Notification Sent ID : " + notification.getNotificationID()+" Mesaj gönderildi mi ? : "+notification.getSeen());// her mssage gonderdiginde gonderdigi messageın id'sini ekrana yazsın
         rabbitTemplate.convertAndSend(exchangeName,routingName, notification);//istedigimiz routinge message'ımızı atıcak
 
     }
