@@ -1,0 +1,20 @@
+WARNING 2023-10-06 10:48:08,574 django.request Bad Request: /api/instance/
+WARNING 2023-10-06 10:48:12,493 django.request Bad Request: /api/instance/
+WARNING 2023-10-06 10:48:17,762 django.request Bad Request: /api/instance/
+WARNING 2023-10-06 10:48:39,166 django.request Bad Request: /api/instance/
+WARNING 2023-10-06 10:48:49,294 django.request Bad Request: /api/instance/
+WARNING 2023-10-06 10:49:29,081 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:34,306 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:40,094 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:45,130 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:52,812 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:53,330 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:53,530 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:53,648 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:53,798 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:57,937 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:58,480 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:49:58,600 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:50:04,183 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:50:04,701 django.request Forbidden: /api/eula-screen-settings/
+WARNING 2023-10-06 10:50:04,873 django.request Forbidden: /api/eula-screen-settings/

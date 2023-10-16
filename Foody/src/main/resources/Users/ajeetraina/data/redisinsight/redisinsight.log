@@ -1,0 +1,6 @@
+WARNING 2023-10-09 07:10:44,693 django.request Not Found: /api/instance/bde6ca30-b712-4b12-ad85-c1fa2fc05245/key-metadata/
+WARNING 2023-10-09 07:10:44,658 django.request Not Found: /api/instance/bde6ca30-b712-4b12-ad85-c1fa2fc05245/value-details/
+WARNING 2023-10-09 07:24:04,838 django.request Not Found: /api/instance/bde6ca30-b712-4b12-ad85-c1fa2fc05245/key-metadata/
+WARNING 2023-10-09 07:24:04,874 django.request Not Found: /api/instance/bde6ca30-b712-4b12-ad85-c1fa2fc05245/value-details/
+WARNING 2023-10-09 07:25:24,739 django.request Not Found: /api/instance/bde6ca30-b712-4b12-ad85-c1fa2fc05245/value-details/
+WARNING 2023-10-09 07:25:24,855 django.request Not Found: /api/instance/bde6ca30-b712-4b12-ad85-c1fa2fc05245/key-metadata/

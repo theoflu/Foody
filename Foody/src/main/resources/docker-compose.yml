@@ -51,3 +51,12 @@ services:
       - '8001:8001'
     volumes:
       - ./Users/ajeetraina/data/redisinsight:/db
+
+  spboot-rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=gue
+      - RABBITMQ_DEFAULT_PASS=gue
